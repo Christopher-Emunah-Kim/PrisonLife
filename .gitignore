@@ -107,6 +107,9 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
 
 
+# IDE
+.idea/
+
 # Claude Code
 .claude/
 CLAUDE.md
