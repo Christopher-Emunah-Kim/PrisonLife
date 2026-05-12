@@ -33,7 +33,7 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
       - _Design/TODO.md                               # MODULE-1~3 등록
       - .claude/rules/general-code.md                 # Logger 규칙, 파일 헤더/수정 로그 규칙 추가
   summary: "MODULE-1(SO) + MODULE-2(ObjectPool) + MODULE-3(Manager 5종) 구현 + 코딩 규칙 업데이트"
-  status: PENDING_COMMIT
+  status: COMMITTED  # 36b604a (MODULE-1) / 5fcf899 (MODULE-2) / 02407cf (MODULE-3)
   bugs_found: []
   bugs_fixed:
     - "ProductionManager TryResumeProduction: goodsBuffer full 상태에서 코루틴 즉시 종료되는 로직 버그 수정"

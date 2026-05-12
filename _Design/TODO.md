@@ -28,11 +28,11 @@
 
 ### [MODULE-3] Manager 레이어 5종
 신규: GameManager.cs / MoneyManager.cs / ProductionManager.cs / SalesManager.cs / PrisonManager.cs
-  - [ ] GameManager: 씬 초기화, TriggerGameEnd, OnFirstSaleCompleted 릴레이        [P0]
-  - [ ] MoneyManager: Add/Spend API, OnMoneyChanged 발행                            [P0]
-  - [ ] ProductionManager: 생산 Coroutine, 4종 static event (OnGoodsBufferChanged<int>) [P0]
-  - [ ] SalesManager: OnSalesCompleted / OnFirstSaleCompleted 발행                  [P0]
-  - [ ] PrisonManager: OnPrisonFull / OnPrisonExpanded / OnPrisonCountChanged       [P0]
+  - [x] GameManager: 씬 초기화, TriggerGameEnd, OnFirstSaleCompleted 릴레이        [P0]
+  - [x] MoneyManager: Add/Spend API, OnMoneyChanged 발행                            [P0]
+  - [x] ProductionManager: 생산 Coroutine, 4종 static event (OnGoodsBufferChanged<int>) [P0]
+  - [x] SalesManager: OnSalesCompleted / OnFirstSaleCompleted 발행                  [P0]
+  - [x] PrisonManager: OnPrisonFull / OnPrisonExpanded / OnPrisonCountChanged       [P0]
 
 ### [MODULE-4] BaseCharacter + PlayerController
 신규: BaseCharacter.cs / PlayerController.cs / InventoryComponent.cs / JoystickController.cs
