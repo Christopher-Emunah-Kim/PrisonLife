@@ -26,7 +26,7 @@ new_files:
   - Assets/Scripts/Managers/PrisonManager.cs
   # MODULE-4
   - Assets/Scripts/Characters/BaseCharacter.cs
-  - Assets/Scripts/Characters/PlayerController.cs
+  - Assets/Scripts/Characters/PlayerCharacter.cs
   - Assets/Scripts/Characters/InventoryComponent.cs
   - Assets/Scripts/Input/JoystickController.cs
   # MODULE-5
@@ -52,7 +52,7 @@ new_files:
   # MODULE-10
   - Assets/Scripts/Zones/DrillUpgradeZone.cs
   - Assets/Scripts/Zones/TractorUpgradeZone.cs
-  - Assets/Scripts/Zones/TractorColliderController.cs
+  # TractorColliderController 삭제 — _miningColliders[2]로 통합 (2026-05-13)
   - Assets/Scripts/Zones/MiningWorkerHireZone.cs
   - Assets/Scripts/Zones/SalesWorkerHireZone.cs
   - Assets/Scripts/Zones/PrisonExpandZone.cs

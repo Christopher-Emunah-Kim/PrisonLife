@@ -34,25 +34,25 @@
   - [x] SalesManager: OnSalesCompleted / OnFirstSaleCompleted 발행                  [P0]
   - [x] PrisonManager: OnPrisonFull / OnPrisonExpanded / OnPrisonCountChanged       [P0]
 
-### [MODULE-4] BaseCharacter + PlayerController
-신규: BaseCharacter.cs / PlayerController.cs / InventoryComponent.cs / JoystickController.cs
-  - [ ] BaseCharacter: _moveSpeed/_rotationSpeed, _inputBlocked, 이동/회전          [P0]
-  - [ ] JoystickController: New Input System, 동적 조이스틱, 데드존                 [P0]
-  - [ ] PlayerController: Zone API 호출 연결                                         [P0]
-  - [ ] InventoryComponent: int[] 슬롯, MAX 체크, OnResourceHalfFull 임계치 이벤트  [P0]
+### [MODULE-4] ✓ COMMITTED 96f5ec2, 63d126c 2026-05-14
+신규: BaseCharacter.cs / PlayerCharacter.cs / InventoryComponent.cs / JoystickController.cs
+  - [x] BaseCharacter: _moveSpeed/_rotationSpeed, _inputBlocked, 이동/회전          [P0]
+  - [x] JoystickController: New Input System, 동적 조이스틱, 데드존                 [P0]
+  - [x] PlayerCharacter: Zone API 호출 연결                                          [P0]
+  - [x] InventoryComponent: int[] 슬롯, MAX 체크, OnResourceHalfFull 임계치 이벤트  [P0]
 
-### [MODULE-5] BaseZone + 인터페이스
+### [MODULE-5] ✓ COMMITTED 9a896d2 2026-05-14
 신규: IInteractableZone.cs / BaseZone.cs / InteractionZone.cs / UpgradeZone.cs
-  - [ ] IInteractableZone 인터페이스                                                 [P0]
-  - [ ] BaseZone: LayerMask 필터, _tickCoroutine 보관, abstract OnPlayerEnter/Exit  [P0]
-  - [ ] InteractionZone: _tickInterval, DropTick/PickupTick, MAX 체크               [P0]
-  - [ ] UpgradeZone: _totalCost/_remainingCost/_isCompleted, abstract OnUpgradeCompleted [P0]
+  - [x] IInteractableZone 인터페이스                                                 [P0]
+  - [x] BaseZone: LayerMask 필터, _tickCoroutine 보관, abstract OnPlayerEnter/Exit  [P0]
+  - [x] InteractionZone: _tickInterval, DropTick/PickupTick, MAX 체크               [P0]
+  - [x] UpgradeZone: _totalCost/_remainingCost/_isCompleted, abstract OnUpgradeCompleted [P0]
 
-### [MODULE-6] MiningGrid + MiningZone
-신규: GridCell.cs / MiningGrid.cs / MiningZone.cs
-  - [ ] GridCell: _isMinable/_isReserved, DOTween 스케일(0.2s)                      [P0]
-  - [ ] MiningGrid: 8×16 배열, GetNearestMinableCell, 리젠 Coroutine(3f)            [P0]
-  - [ ] MiningZone: 단계별 콜라이더 전환 + TractorColliderController               [P0]
+### [MODULE-6] ✓ COMMITTED 8fc4726, c5945ee 2026-05-14
+신규: GridCell.cs / MiningGrid.cs / MiningZone.cs / MiningColliderBridge.cs / MiningGridEditor.cs / GridCell.prefab
+  - [x] GridCell: _isMinable/_isReserved, DOTween 스케일(0.2s)                      [P0]
+  - [x] MiningGrid: 8×16 배열, GetNearestMinableCell, 리젠 Coroutine(3f)            [P0]
+  - [x] MiningZone: 단계별 콜라이더 전환 + _miningMeshes                            [P0]
 
 ### [MODULE-7] 생산 Zone 2종
 신규: ResourceDropZone.cs / GoodsPickupZone.cs
@@ -80,11 +80,11 @@
   - [ ] SalesWorkerHireZone: SalesWorker 1명 스폰                                    [P0]
   - [ ] PrisonExpandZone: ExpandCapacity(40), GameManager.TriggerGameEnd()           [P0]
 
-### [MODULE-13] CameraController
+### [MODULE-13] ✓ COMMITTED 7f15f53 2026-05-14
 신규: CameraController.cs
-  - [ ] LateUpdate 즉시 추적                                                          [P0]
-  - [ ] PlayCutscene Coroutine (lerp→대기→복귀), 입력 블록                           [P0]
-  - [ ] OnFirstSaleCompleted / OnPrisonFull 구독                                     [P0]
+  - [x] LateUpdate 즉시 추적                                                          [P0]
+  - [x] PlayCutscene Coroutine (lerp→대기→복귀), 입력 블록                           [P0]
+  - [x] OnFirstSaleCompleted / OnPrisonFull 구독                                     [P0]
 
 ### [MODULE-14] HUD + UI
 신규: HUDController.cs / MaxIndicatorUI.cs / GameEndUI.cs
