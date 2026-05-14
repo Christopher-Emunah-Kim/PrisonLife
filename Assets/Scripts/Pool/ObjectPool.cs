@@ -1,27 +1,39 @@
 /// <summary>
-/// IPoolable 컴포넌트를 Get/Return으로 재사용하는 제네릭 오브젝트 풀.
-/// 소유: PrisonerSpawner, ResourceDropZone, MoneyZone (각 풀 인스턴스 소유)
-/// 의존: IPoolable (풀 대상 인터페이스)
+/// IPoolable 컴포넌트를 Get/Return으로 재사용하는 제네릭 오브젝트 풀 (순수 C# 클래스).
+/// 소유: PrisonerSpawner, ResourceDropZone, GoodsPickupZone, MoneyZone (생성자로 직접 생성)
+/// 의존: IPoolable
 /// </summary>
 using System.Collections.Generic;
 using UnityEngine;
 
-// T는 Initialize()로 상태를 완전히 리셋할 수 있는 MonoBehaviour 컴포넌트여야 한다.
 public interface IPoolable
 {
     void Initialize();
 }
 
-public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolable
+public class ObjectPool<T> where T : MonoBehaviour, IPoolable
 {
-    [SerializeField] private T _prefab;
-    [SerializeField] private int _poolSize = 30;
+    private readonly Stack<T>   _pool;
+    private readonly T          _prefab;
+    private readonly Transform  _parent;
 
-    private readonly Stack<T> _pool = new Stack<T>();
-
-    private void Awake()
+    /// <param name="prefab">풀링할 프리팹. null이면 풀 생성 중단.</param>
+    /// <param name="poolSize">초기 생성 수량.</param>
+    /// <param name="parent">Instantiate 시 부모 Transform.</param>
+    public ObjectPool(T prefab, int poolSize, Transform parent)
     {
-        for (int i = 0; i < _poolSize; i++)
+        if (prefab == null)
+        {
+            Logger.Error("ObjectPool", $"Prefab이 null입니다. 풀 생성 중단 ({typeof(T).Name})");
+            _pool = new Stack<T>();
+            return;
+        }
+
+        _prefab = prefab;
+        _parent = parent;
+        _pool   = new Stack<T>(poolSize);
+
+        for (int i = 0; i < poolSize; i++)
         {
             T obj = CreateNew();
             obj.gameObject.SetActive(false);
@@ -45,7 +57,6 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour, IPoolable
 
     private T CreateNew()
     {
-        T obj = Instantiate(_prefab, transform);
-        return obj;
+        return Object.Instantiate(_prefab, _parent);
     }
 }
