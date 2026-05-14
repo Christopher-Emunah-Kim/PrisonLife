@@ -4,14 +4,19 @@
 /// 소유: 씬 Player 오브젝트
 /// 의존: BaseCharacter, InventoryComponent, JoystickController
 /// </summary>
+/// 수정 로그:
+/// 2026-05-15 FlySocket 추가 (ResourceFlyObject 출발/도착 위치)
 using UnityEngine;
 
 [RequireComponent(typeof(InventoryComponent))]
 public class PlayerCharacter : BaseCharacter
 {
     public InventoryComponent Inventory { get; private set; }
-    
-    [SerializeField] private Animator _animator;
+
+    [SerializeField] private Animator   _animator;
+    [SerializeField] private Transform  _flySocket;  // ResourceFlyObject 출발/도착 위치 (백팩 높이)
+
+    public Transform FlySocket => _flySocket != null ? _flySocket : transform;
     
     // 조이스틱 델타 (XY 스크린 → XZ 월드 변환)
     private Vector2 _inputDelta;
