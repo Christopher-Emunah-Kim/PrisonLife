@@ -54,10 +54,16 @@
   - [x] MiningGrid: 8×16 배열, GetNearestMinableCell, 리젠 Coroutine(3f)            [P0]
   - [x] MiningZone: 단계별 콜라이더 전환 + _miningMeshes                            [P0]
 
-### [MODULE-7] 생산 Zone 2종
-신규: ResourceDropZone.cs / GoodsPickupZone.cs
-  - [ ] ResourceDropZone: 자원 투입 틱, DOTween 날아가는 연출(0.4f), MAX UI        [P0]
-  - [ ] GoodsPickupZone: 완제품 픽업 틱, OnGoodsPickupCompleted 최초 1회 발행       [P0]
+### [MODULE-7] ✓ COMMITTED 7edfba0,659fddf,afb7668,c657adf,945562f,d9e46a0 2026-05-15
+신규: ResourceDropZone.cs / GoodsPickupZone.cs / ResourceFlyObject.cs / StackMeshItem.cs / MaxIndicatorUI.cs(stub)
+  - [x] ResourceDropZone: 자원 투입 틱, DOTween 포물선 연출, 버퍼 메시 적층, MAX UI
+  - [x] GoodsPickupZone: 완제품 픽업 틱, OnGoodsPickupCompleted 최초 1회 발행, 버퍼 메시 적층, MAX UI
+  - [x] ObjectPool<T> 순수 C# 클래스로 전환 (생성자 방식)
+  - [x] InventoryComponent 백팩/쟁반 더미 메시 적층 (소켓 3개 + ObjectPool<StackMeshItem>)
+  - [x] ProductionManager ResourceBufferMax / GoodsBufferMax 프로퍼티 추가
+  - [x] PlayerCharacter FlySocket 추가
+  - [ ] [에디터] ResourceFlyObject Prefab / StackMeshItem Prefab 3종 생성 후 슬롯 연결  [P0]
+  - [~] [검토] 버퍼/백팩 메시 단위(5개) ON/OFF → 1개 단위 점진적 쌓임 연출로 개선 필요한지 폴리싱 단계에서 판단 | [P2]
 
 ### [MODULE-8] 판매 Zone 3종
 신규: SalesDeskZone.cs / SalesZone.cs / MoneyZone.cs
