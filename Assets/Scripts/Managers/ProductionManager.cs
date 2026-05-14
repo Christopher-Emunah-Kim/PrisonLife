@@ -3,6 +3,8 @@
 /// 소유: GameManager (초기화), ResourceDropZone / GoodsPickupZone (버퍼 조작)
 /// 의존: GameBalanceData
 /// </summary>
+/// 수정 로그:
+/// 2026-05-14 ResourceBufferMax / GoodsBufferMax 프로퍼티 추가 (ResourceDropZone, GoodsPickupZone 참조)
 using System;
 using System.Collections;
 using UnityEngine;
@@ -23,8 +25,10 @@ public class ProductionManager : MonoBehaviour
     private int _goodsBuffer;
     private Coroutine _productionCoroutine;
 
-    public int ResourceBuffer => _resourceBuffer;
-    public int GoodsBuffer    => _goodsBuffer;
+    public int ResourceBuffer    => _resourceBuffer;
+    public int ResourceBufferMax => _balanceData != null ? _balanceData.resourceBufferMax : 0;
+    public int GoodsBuffer       => _goodsBuffer;
+    public int GoodsBufferMax    => _balanceData != null ? _balanceData.goodsBufferMax : 0;
 
     private void Awake()
     {
@@ -43,6 +47,7 @@ public class ProductionManager : MonoBehaviour
         {
             return false;
         }
+        
         _resourceBuffer = Mathf.Min(_resourceBuffer + amount, _balanceData.resourceBufferMax);
         OnResourceBufferChanged?.Invoke(_resourceBuffer);
 
