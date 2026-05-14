@@ -12,6 +12,47 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 
 ---
 
+## PrisonLife — MODULE-7 (2026-05-15)
+```yaml
+- date: 2026-05-15
+  plan: PLAN_PrisonLife_v1.0
+  commit: "7edfba0(ObjectPool-refactor) 659fddf(InventoryComponent) afb7668(ResourceDropZone) c657adf(GoodsPickupZone) 945562f(prefabs) d9e46a0(TMP) a011e4a(docs)"
+  files:
+    created:
+      - Assets/Scripts/Zones/ResourceDropZone.cs        # MODULE-7: 자원 투입 Zone
+      - Assets/Scripts/Zones/GoodsPickupZone.cs         # MODULE-7: 완제품 픽업 Zone
+      - Assets/Scripts/Zones/ResourceFlyObject.cs       # MODULE-7: DOTween 포물선 연출
+      - Assets/Scripts/Characters/StackMeshItem.cs      # MODULE-7: IPoolable 더미 메시
+      - Assets/Scripts/UI/MaxIndicatorUI.cs             # MODULE-7: MAX 인디케이터 stub
+      - Assets/Prefabs/FlyObject_Resource.prefab        # 연출 프리팹
+      - Assets/Prefabs/FlyObject_Goods.prefab           # 연출 프리팹
+      - Assets/Prefabs/StackMesh_Resource.prefab        # 더미 메시 프리팹
+      - Assets/Prefabs/StackMesh_Goods.prefab           # 더미 메시 프리팹
+      - Assets/Prefabs/StackMesh_Money.prefab           # 더미 메시 프리팹
+    modified:
+      - Assets/Scripts/Pool/ObjectPool.cs               # MonoBehaviour → 순수 C# 클래스 전환
+      - Assets/Scripts/Characters/InventoryComponent.cs # 소켓 3개 + ObjectPool<StackMeshItem> 적층 연출
+      - Assets/Scripts/Characters/PlayerCharacter.cs    # FlySocket 추가
+      - Assets/Scripts/Managers/ProductionManager.cs    # ResourceBufferMax / GoodsBufferMax 프로퍼티
+      - _Design/TODO.md
+      - Assets/Scenes/PlayScene.unity
+      - Assets/Scenes/TestScene.unity
+  summary: "MODULE-7(ResourceDropZone+GoodsPickupZone+ResourceFlyObject+StackMeshItem) + ObjectPool 순수 C# 전환 + InventoryComponent 소켓 기반 메시 적층"
+  status: COMMITTED
+  bugs_found:
+    - "FlyObject가 world origin(0,0,0)으로 날아가는 문제: Fly() 호출 전 transform.position 미설정"
+    - "플레이어 피벗이 발 위치여서 FlySocket 위치 부정확"
+    - "GoodsPickupZone OnTick에서 MAX 체크가 픽업 자체를 막는 문제"
+    - "돈 메시가 자원 도착 시 소켓 1→2로 이동하지 않는 문제 (ReparentIfNeeded 누락)"
+  bugs_fixed:
+    - "Fly() 첫 줄에 transform.position = from 추가"
+    - "PlayerCharacter에 FlySocket([SerializeField] Transform) 추가"
+    - "MAX UI 로직을 HandleGoodsBufferChanged 이벤트 핸들러로 완전 이관"
+    - "ReparentIfNeeded() 메서드로 소켓 전환 시 부모 변경 처리"
+```
+
+---
+
 ## PrisonLife — MODULE-4~6 + MODULE-13 + ExternalAssets (2026-05-14)
 ```yaml
 - date: 2026-05-14
