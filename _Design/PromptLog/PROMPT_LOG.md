@@ -21,17 +21,44 @@
 
 <!-- 최신 요청이 위 -->
 
-### 2026-05-15 12:07
+### [N] 2026-05-17
+**카테고리:** DEBUG
+**요청:**
+[PrisonerSpawner] SetNoCellAll(True) — 대기큐:4 이동중:2 ... 이렇게 뜨는데, NO CELL이벤트가 발생되는 순간 이미 _movingToPrison, _waitingQueue에 들어가있던 인스턴스들은 NOCELL이 떠있는데, 그 이후에 Sales가 일어나서 새롭게 _watingQueue에서 빠지고 _movingToPrison에 들어가는 인스턴스들도 DequeueFront시점에 체크해서 이동 시작후 NoCellRoot켜도록 바꿔.
+---
+
+### [N] 2026-05-17
 **카테고리:** CODE
 **요청:**
-에디터 작업 완료해뒀어. MODULE-8진행하자.
+ProgressBar의 Image컴포넌트는 Type을 Filled로, FillMethod는vertical, bottom부터로 설정해뒀어. 지금 FillAmount하는 방식이 거꾸로야. 판매가 될수록 SetCount는 줄어드는게 맞지만, ProgressBar는 채워져야되는거잖아? 기획서에 맞게 바꿔.
 
 ---
 
-### 2026-05-15 12:05
+### [N] 2026-05-17
 **카테고리:** CODE
 **요청:**
-MODULE-7까지 리뷰완료. 8할차례인가?
+SalesZone의 _prisonDirection을 Vector3로 받는게 아니라 씬에 있는 오브젝트 위치를 받도록 수정하자.
+
+---
+
+### [N] 2026-05-16
+**카테고리:** CODE
+**요청:**
+웅 동일 패턴 문제가 있나 Zone들 체크해봐
+
+---
+
+### [N] 2026-05-16
+**카테고리:** CODE
+**요청:**
+SalesZone.SalesTick에 yield break하기전에 _tickCoroutine null처리 안해도되나? 지금 단순하게 yield break만 하고 끝내는것같은데
+
+---
+
+### [N] 2026-05-16
+**카테고리:** CODE
+**요청:**
+SalesDeskZone에서 현재 진입시 쟁반 전량 책상으로 이동하게 되어있는데 ResourceDropZone과 동일 패턴으로 1개씩 이동하게 바꿔. 성공하면 _deskGoods++후 RefreshDeskMeshes(), UpdateMaxUI()호출하고, 책상 MAX면 스킵. 쟁반 비어있어도 스킵. 빠진거있나?
 
 ---
 

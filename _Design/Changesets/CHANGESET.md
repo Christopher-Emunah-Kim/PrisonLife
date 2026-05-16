@@ -12,6 +12,69 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 
 ---
 
+## PrisonLife — MODULE-9 (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_PrisonLife_v1.0
+  commit: "0ac1369(Prisoner) 07105ea(PrisonerSpawner) 7dae784(PrisonZone) 2a93a67(SalesZone) 42d3fc0(chore)"
+  files:
+    created:
+      - Assets/Scripts/Characters/Prisoner.cs        # 직선 이동, 구매 수량 기반 말풍선
+      - Assets/Scripts/Characters/PrisonerSpawner.cs # ObjectPool, FIFO 큐, No Cell late-join
+      - Assets/Scripts/Zones/PrisonZone.cs           # 그리드 동적 생성, Prisoner 수용
+      - Assets/Scripts/UI/PrisonerBubbleUI.cs        # TMP + Filled 프로그레스바 + No Cell
+      - Assets/Prefabs/Prisoner.prefab
+    modified:
+      - Assets/Scripts/Zones/SalesZone.cs            # 죄수 큐 조건 연결, 틱 단위 처리
+      - Assets/Scripts/Data/PrisonerData.cs          # prisonColumns/Spacing 추가
+      - Assets/Scripts/Zones/MiningGrid.cs           # var → 타입 명시
+      - Assets/Resources/Data/PrisonerData.asset
+      - Assets/Resources/Data/GameBalanceData.asset
+      - Assets/Scenes/PlayScene.unity
+  summary: "MODULE-9(Prisoner+PrisonerSpawner+PrisonZone+PrisonerBubbleUI) + SalesZone 죄수 큐 연결"
+  status: COMMITTED
+  bugs_found:
+    - "PrisonZone OnTriggerEnter: 자식 Collider 감지 실패 (TryGetComponent → GetComponentInParent)"
+    - "MoveTowardPrison direction*100f 방식: SalesZone 기준 방향으로 인한 이동 오차"
+    - "OnPrisonFull 이후 신규 dequeue 죄수 No Cell 미표시"
+  bugs_fixed:
+    - "GetComponentInParent<Prisoner>() 로 변경"
+    - "방향 벡터 대신 목적지 위치 직접 전달 (_prisonTarget Transform)"
+    - "DequeueFront 시점 IsFull 즉시 체크로 late-join No Cell 처리"
+```
+
+---
+
+## PrisonLife — MODULE-8 (2026-05-16)
+```yaml
+- date: 2026-05-16
+  plan: PLAN_PrisonLife_v1.0
+  commit: "72abb15(SalesDeskZone) 963eda2(SalesZone) 89d806c(MoneyZone) 2150be7(fix-coroutine+data) cdd4de7(chore) 7c01be0(docs)"
+  files:
+    created:
+      - Assets/Scripts/Zones/SalesDeskZone.cs   # MODULE-8: 쟁반→책상 1개씩 틱 이전
+      - Assets/Scripts/Zones/SalesZone.cs        # MODULE-8: 3조건 판매 틱
+      - Assets/Scripts/Zones/MoneyZone.cs        # MODULE-8: 판매금 누적→백팩 이전
+    modified:
+      - Assets/Scripts/Zones/InteractionZone.cs  # fix: yield break 시 _tickCoroutine null 처리
+      - Assets/Scripts/Zones/UpgradeZone.cs      # fix: yield break 시 _tickCoroutine null 처리
+      - Assets/Scripts/Data/GameBalanceData.cs   # fix: backpackMoneyMax 기본값 1200 추가
+      - Assets/Scenes/PlayScene.unity
+      - _Design/TODO.md
+      - _Design/PromptLog/PROMPT_LOG.md
+      - _Design/Portfolio/DEVLOG.md
+  summary: "MODULE-8(SalesDeskZone+SalesZone+MoneyZone) + Coroutine yield break null 처리 + backpackMoneyMax 기본값 수정"
+  status: COMMITTED
+  bugs_found:
+    - "yield break 자가 종료 시 _tickCoroutine stale reference 잔류"
+    - "GameBalanceData.backpackMoneyMax 기본값 0 → IsMoneyFull() 항상 true"
+  bugs_fixed:
+    - "yield break 직전 _tickCoroutine = null 추가 (InteractionZone, UpgradeZone, SalesZone)"
+    - "GameBalanceData.backpackMoneyMax = 1200 기본값 추가"
+```
+
+---
+
 ## PrisonLife — MODULE-7 (2026-05-15)
 ```yaml
 - date: 2026-05-15

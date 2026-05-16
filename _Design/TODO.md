@@ -65,17 +65,20 @@
   - [ ] [에디터] ResourceFlyObject Prefab / StackMeshItem Prefab 3종 생성 후 슬롯 연결  [P0]
   - [~] [검토] 버퍼/백팩 메시 단위(5개) ON/OFF → 1개 단위 점진적 쌓임 연출로 개선 필요한지 폴리싱 단계에서 판단 | [P2]
 
-### [MODULE-8] 판매 Zone 3종
+### [MODULE-8] ✓ COMMITTED 72abb15,963eda2,89d806c,2150be7,cdd4de7,7c01be0 2026-05-16
 신규: SalesDeskZone.cs / SalesZone.cs / MoneyZone.cs
-  - [>] SalesDeskZone: 쟁반 전량 내려놓기, MAX UI                                   [P0]
-  - [>] SalesZone: 3조건 체크, 판매 틱, OnFirstSaleCompleted 최초 1회               [P0]
-  - [>] MoneyZone: 누적 → 전액 이전, DOTween 흡수 연출(0.3f)                        [P0]
+  - [x] SalesDeskZone: 쟁반 전량 내려놓기, MAX UI
+  - [x] SalesZone: 3조건 체크, 판매 틱, OnFirstSaleCompleted 최초 1회
+  - [x] MoneyZone: 누적 → 전액 이전, DOTween 흡수 연출(0.3f)
 
-### [MODULE-9] Prisoner + PrisonerSpawner + PrisonZone
-신규: Prisoner.cs / PrisonerSpawner.cs / PrisonZone.cs
-  - [ ] Prisoner: Initialize() 리셋, 말풍선 UI 참조, 직선 이동                      [P0]
-  - [ ] PrisonerSpawner: ObjectPool<Prisoner>, 스폰 Coroutine(3f), 큐 MAX(5)        [P0]
-  - [ ] PrisonZone: 수용 카운터, 메시 40개 순서대로 ON, OnPrisonFull 발행           [P0]
+### [MODULE-9] ✓ COMMITTED 0ac1369,07105ea,7dae784,2a93a67,42d3fc0 2026-05-17
+신규: Prisoner.cs / PrisonerSpawner.cs / PrisonZone.cs / PrisonerBubbleUI.cs
+  - [x] Prisoner: Initialize() 리셋, 말풍선 UI 참조, 직선 이동
+  - [x] PrisonerSpawner: ObjectPool<Prisoner>, 스폰 Coroutine(3f), 큐 MAX(5)
+  - [x] PrisonZone: 메시 그리드 동적 생성, OnPrisonFull 발행
+  - [x] PrisonerBubbleUI: 구매 수량 TMP + 프로그레스바 + No Cell
+  - [x] SalesZone: 죄수 큐 조건 연결, 틱마다 1개씩 처리
+  - [x] [에디터] Prisoner Prefab + 씬 배치 완료
 
 ### [MODULE-10] UpgradeZone 5종
 신규: DrillUpgradeZone.cs / TractorUpgradeZone.cs / TractorColliderController.cs / MiningWorkerHireZone.cs / SalesWorkerHireZone.cs / PrisonExpandZone.cs
