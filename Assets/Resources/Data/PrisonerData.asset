@@ -16,3 +16,6 @@ MonoBehaviour:
   maxQueueSize: 5
   purchaseMin: 2
   purchaseMax: 4
+  prisonColumns: 5
+  prisonSpacingX: 1
+  prisonSpacingZ: 1

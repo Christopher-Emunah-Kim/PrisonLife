@@ -57,7 +57,7 @@ public class MiningGrid : MonoBehaviour
         GridCell nearest  = null;
         float    minDist  = float.MaxValue;
 
-        foreach (var cell in _cells)
+        foreach (GridCell cell in _cells)
         {
             if (cell == null || !cell.IsMinable || cell.IsReserved)
             {
