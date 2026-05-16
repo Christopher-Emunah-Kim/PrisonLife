@@ -17,4 +17,9 @@ public class PrisonerData : ScriptableObject
     [Header("구매")]
     public int   purchaseMin = 2;       // 구매 수량 최솟값
     public int   purchaseMax = 4;       // 구매 수량 최댓값
+
+    [Header("감옥 그리드")]
+    public int   prisonColumns  = 5;    // 한 행에 배치할 메시 수
+    public float prisonSpacingX = 1f;   // 열 간격
+    public float prisonSpacingZ = 1f;   // 행 간격
 }
