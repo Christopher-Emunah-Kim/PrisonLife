@@ -67,9 +67,9 @@
 
 ### [MODULE-8] 판매 Zone 3종
 신규: SalesDeskZone.cs / SalesZone.cs / MoneyZone.cs
-  - [ ] SalesDeskZone: 쟁반 전량 내려놓기, MAX UI                                   [P0]
-  - [ ] SalesZone: 3조건 체크, 판매 틱, OnFirstSaleCompleted 최초 1회               [P0]
-  - [ ] MoneyZone: 누적 → 전액 이전, DOTween 흡수 연출(0.3f)                        [P0]
+  - [>] SalesDeskZone: 쟁반 전량 내려놓기, MAX UI                                   [P0]
+  - [>] SalesZone: 3조건 체크, 판매 틱, OnFirstSaleCompleted 최초 1회               [P0]
+  - [>] MoneyZone: 누적 → 전액 이전, DOTween 흡수 연출(0.3f)                        [P0]
 
 ### [MODULE-9] Prisoner + PrisonerSpawner + PrisonZone
 신규: Prisoner.cs / PrisonerSpawner.cs / PrisonZone.cs

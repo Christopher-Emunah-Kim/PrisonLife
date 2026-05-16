@@ -19,3 +19,27 @@
 ---
 
 <!-- 새 항목은 가장 최근 날짜가 위로 오도록 추가 -->
+
+## [2026-05-16] [BUG_FIX] yield break 시 Coroutine 참조 잔류 버그 수정
+
+**상황**
+`SalesZone` 구현 중 코드 리뷰 과정에서 `yield break` 전 `_tickCoroutine = null` 처리 누락을 발견. `InteractionZone`, `UpgradeZone`에도 동일 패턴이 존재해 일괄 수정.
+
+**문제·과제**
+Unity Coroutine이 스스로 `yield break`로 종료할 때 `_tickCoroutine` 필드에 죽은 참조(stale reference)가 잔류한다. 이후 플레이어가 Zone에 재진입하면 `OnPlayerEnter → StopTick()` 이 이미 종료된 코루틴에 `StopCoroutine`을 시도하게 된다.
+
+**검토한 선택지**
+- 방치: 실제로는 Unity가 종료된 코루틴에 `StopCoroutine`을 호출해도 crash는 없음. 그러나 `OnWorkerEnter`의 `_tickCoroutine == null` 가드가 오동작할 위험이 있음
+- `yield break` 직전 `_tickCoroutine = null` 추가: 참조를 명시적으로 정리해 가드 로직이 정확하게 동작하도록 보장
+
+**결정**
+`yield break` 직전 `_tickCoroutine = null` 추가. 단, `StopTick()` 경유 종료(`StopCoroutine` + `= null` 이미 처리)는 예외로 적용 불필요.
+
+**결과**
+`InteractionZone`, `UpgradeZone`, `SalesZone` 3개 파일 수정. 재진입 시 코루틴 이중 실행 및 가드 오동작 방지.
+
+**포트폴리오 포인트**
+Unity Coroutine 생명주기에서 외부 중단(`StopCoroutine`)과 자가 종료(`yield break`)의 참조 처리 차이를 구분하고, 방어 코드를 패턴으로 구조화한 사례.
+
+**관련 파일**
+`Assets/Scripts/Zones/InteractionZone.cs`, `UpgradeZone.cs`, `SalesZone.cs`
