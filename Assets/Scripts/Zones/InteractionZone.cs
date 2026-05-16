@@ -32,6 +32,7 @@ public abstract class InteractionZone : BaseZone
             if (player == null)
             {
                 Logger.Warn("InteractionZone", "Tick 중단: player가 null");
+                _tickCoroutine = null;
                 yield break;
             }
 

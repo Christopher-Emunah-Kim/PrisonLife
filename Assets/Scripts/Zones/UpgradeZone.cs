@@ -49,6 +49,7 @@ public abstract class UpgradeZone : BaseZone
             // 완료 플래그 재진입 방어
             if (_isCompleted)
             {
+                _tickCoroutine = null;
                 yield break;
             }
 
@@ -57,6 +58,7 @@ public abstract class UpgradeZone : BaseZone
             if (player == null)
             {
                 Logger.Warn("UpgradeZone", "Tick 중단: player가 null");
+                _tickCoroutine = null;
                 yield break;
             }
 

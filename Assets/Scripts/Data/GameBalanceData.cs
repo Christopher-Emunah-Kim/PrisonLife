@@ -18,7 +18,7 @@ public struct MiningLevelData
 public class GameBalanceData : ScriptableObject
 {
     [Header("백팩 용량")]
-    public int backpackMoneyMax;    // 백팩 돈 MAX
+    public int backpackMoneyMax = 1200;    // 백팩 돈 MAX
 
     [Header("채굴 업그레이드 단계별 수치")]
     // index 0 = 1단계(곡괭이), 1 = 2단계(드릴), 2 = 3단계(트랙터)
