@@ -12,6 +12,55 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 
 ---
 
+## PrisonLife — 코드 품질 리팩토링 (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_PrisonLife_v1.0
+  commit: "c06af36(fix-InteractionZone) c404969(refactor-Managers) 13a64de(refactor-UI)"
+  files:
+    created:
+      - Assets/Scripts/Util/Singleton.cs              # 제네릭 싱글턴 베이스 클래스
+      - Assets/Scripts/UI/BaseProgressUI.cs           # 공통 프로그레스바 베이스 클래스
+    deleted:
+      - Assets/Scripts/UI/MaxIndicatorUI.cs           # SetActive 래퍼 수준 — 불필요 제거
+    modified:
+      - Assets/Scripts/Zones/Base/InteractionZone.cs  # WaitForSeconds 캐싱, protected virtual Awake
+      - Assets/Scripts/Zones/Base/UpgradeZone.cs      # WaitForSeconds 캐싱
+      - Assets/Scripts/Zones/Interaction/GoodsPickupZone.cs  # base.Awake() 호출, TryResumeProduction 제거
+      - Assets/Scripts/Zones/Interaction/MoneyZone.cs         # base.Awake() 호출
+      - Assets/Scripts/Zones/Interaction/ResourceDropZone.cs  # base.Awake() 호출
+      - Assets/Scripts/Zones/Interaction/SalesDeskZone.cs     # base.Awake() 호출
+      - Assets/Scripts/Zones/Mining/MiningGrid.cs             # WaitForSeconds 캐싱
+      - Assets/Scripts/Zones/Sales/SalesZone.cs               # WaitForSeconds 캐싱
+      - Assets/Scripts/Characters/Prisoner/PrisonerSpawner.cs # WaitForSeconds 캐싱
+      - Assets/Scripts/Managers/GameManager.cs                # Singleton<T> 상속, instance event
+      - Assets/Scripts/Managers/MoneyManager.cs               # Singleton<T> 상속, instance event
+      - Assets/Scripts/Managers/ProductionManager.cs          # Singleton<T> 상속, instance event, ConsumeGoods 내 TryResumeProduction
+      - Assets/Scripts/Managers/SalesManager.cs               # Singleton<T> 상속, instance event
+      - Assets/Scripts/Managers/PrisonManager.cs              # Singleton<T> 상속, instance event
+      - Assets/Scripts/Managers/SFXManager.cs                 # Singleton<T> 상속
+      - Assets/Scripts/Managers/TutorialSystem.cs             # Singleton<T> 상속
+      - Assets/Scripts/Managers/UpgradeManager.cs             # instance event 구독 방식
+      - Assets/Scripts/Managers/CameraController.cs           # instance event 구독 방식
+      - Assets/Scripts/UI/HUDController.cs                    # instance event 구독 방식
+      - Assets/Scripts/UI/GameEndUI.cs                        # instance event 구독 방식
+      - Assets/Scripts/UI/PrisonCounterUI.cs                  # instance event 구독 방식
+      - Assets/Scripts/UI/PrisonerBubbleUI.cs                 # BaseProgressUI 상속
+      - Assets/Scripts/UI/UpgradeProgressUI.cs                # BaseProgressUI 상속
+      - Assets/Scripts/Util/Logger.cs                         # Conditional 어트리뷰트 방식
+      - Assets/Scripts/Zones/Prison/PrisonZone.cs             # instance event 구독 방식
+      - Assets/Scripts/Zones/Upgrade/MiningWorkerHireZone.cs  # instance event 구독 방식
+      - Assets/Scripts/Zones/Upgrade/SalesWorkerHireZone.cs   # instance event 구독 방식
+  summary: "WaitForSeconds 캐싱 + Singleton<T> 베이스 + instance event 전환 + BaseProgressUI 추출 + Logger Conditional"
+  status: COMMITTED
+  bugs_found:
+    - "InteractionZone Awake() private 선언 → 하위 4개 클래스 private Awake hiding으로 base.Awake 미호출 → _tickWait null → 매 프레임 틱"
+  bugs_fixed:
+    - "protected virtual Awake() + 하위 protected override + base.Awake() 호출 패턴으로 수정"
+```
+
+---
+
 ## PrisonLife — MODULE-10 (2026-05-17)
 ```yaml
 - date: 2026-05-17

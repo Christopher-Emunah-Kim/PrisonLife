@@ -113,18 +113,14 @@
   - [x] Zone 9종 + ProductionManager: SFX·Tutorial 호출 추가                        [P0]
   - [x] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh)        5c3b6c7
 
-### [MODULE-11] MiningWorker FSM                                                      [P0]
+### [MODULE-11] ✓ COMMITTED (이전 세션) MiningWorker FSM
 신규: MiningWorker.cs
   - [x] FSM: Moving/Mining, 셀 예약/해제, 채굴 틱, DOTween 날아가는 연출            [P0]
 
 ### [MODULE-12] SalesWorker FSM                                                       [P0]
 신규: SalesWorker.cs
   - [>] FSM: WaitingAtSales→MovingToPickup→MovingToDesk→MovingToSales 루프           [P0]
-
-### [MODULE-12] SalesWorker 루프                                                      [P1]
-신규: SalesWorker.cs
-  - [ ] 상태 머신: WaitingAtTrigger/MovingToBuffer/MovingToDesk/MovingToTrigger      [P1]
-  - [ ] OnGoodsBufferChanged(int) 구독 대기/재개                                     [P1]
+  - [ ] 커밋 대기 중 (SalesWorker.cs 구현 완료, 이번 세션 리팩토링과 분리)          [P0]
 
 ### [MODULE-15] ✓ MODULE-14에 흡수 완료 2026-05-17
 
@@ -139,9 +135,9 @@
 ---
 
 ## NEXT_SESSION
-- [ ] [P1] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh, 회전 수정)
-- [ ] [P1] MODULE-11: MiningWorker FSM
-- [ ] [P1] MODULE-12: SalesWorker 루프
+- [ ] [P0] MODULE-12: SalesWorker.cs 커밋 (이번 세션 리팩토링과 분리됨)
+- [ ] [P0] GameBalanceData.asset / PlayScene.unity 커밋 여부 확인
+- [ ] [P1] MODULE-17: Physics Layer Matrix 설정
 
 ---
 
