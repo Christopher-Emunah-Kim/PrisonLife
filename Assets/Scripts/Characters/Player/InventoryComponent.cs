@@ -6,6 +6,7 @@
 /// 수정 로그:
 /// 2026-05-14 백팩 자원/돈 적층 메시 + 쟁반 메시 ON/OFF 로직 추가
 /// 2026-05-15 소켓 3개 + 단일 프리팹 방식으로 교체, ObjectPool 적용
+/// 2026-05-17 ConsumeMoney에서 MoneyManager.Spend 연동 — HUD 갱신 누락 수정
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -143,6 +144,7 @@ public class InventoryComponent : MonoBehaviour
 
         _backpackSlots[1] -= amount;
         RefreshBackpackMeshes();
+        MoneyManager.Instance?.Subtract(amount);
         return true;
     }
 
