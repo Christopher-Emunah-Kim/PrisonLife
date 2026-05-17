@@ -100,11 +100,18 @@
   - [x] PlayCutscene Coroutine (lerp→대기→복귀), 입력 블록                           [P0]
   - [x] OnFirstSaleCompleted / OnPrisonFull 구독                                     [P0]
 
-### [MODULE-14] HUD + UI
-신규: HUDController.cs / MaxIndicatorUI.cs / GameEndUI.cs
-  - [ ] HUDController: Safe Area, OnMoneyChanged 구독, PLAY 버튼, 음소거             [P0]
-  - [ ] MaxIndicatorUI: World Space Canvas, SetVisible API                            [P0]
-  - [ ] GameEndUI: OnPrisonExpanded 구독, DOTween 페이드인, Time.timeScale=0         [P0]
+### [MODULE-14] ✓ COMMITTED c99764e,831afdb,6ed95e1,01eebda,e16dbbb,52b74a7 2026-05-17
+신규: HUDController.cs / GameEndUI.cs / IndicatorArrow.cs / TutorialSystem.cs / SFXManager.cs / PrisonCounterUI.cs
+수정: MaxIndicatorUI.cs / Zone 9종 / PlayScene
+  - [x] HUDController: Safe Area, OnMoneyChanged 구독, 음소거 버튼                  [P0]
+  - [x] MaxIndicatorUI: SetVisible API (stub → 완성)                                 [P0]
+  - [x] PrisonCounterUI: World Space, OnPrisonCountChanged 구독, 색상 전환          [P0]
+  - [x] GameEndUI: OnPrisonExpanded 구독, DOTween 페이드인, Time.timeScale=0        [P0]
+  - [x] IndicatorArrow: 카메라 기준 방향 계산, 화면 가장자리 클램프, SetTarget API  [P0]
+  - [x] TutorialSystem: ETutorialID 상태 머신, IndicatorArrow 연동                  [P0]
+  - [x] SFXManager: null-safe PlayOneShot, 음소거 토글 연동                         [P0]
+  - [x] Zone 9종 + ProductionManager: SFX·Tutorial 호출 추가                        [P0]
+  - [~] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh)               [P1]
 
 ### [MODULE-11] MiningWorker FSM                                                      [P1]
 신규: MiningWorker.cs
@@ -115,16 +122,9 @@
   - [ ] 상태 머신: WaitingAtTrigger/MovingToBuffer/MovingToDesk/MovingToTrigger      [P1]
   - [ ] OnGoodsBufferChanged(int) 구독 대기/재개                                     [P1]
 
-### [MODULE-15] 인디케이터 화살표 + TutorialSystem                                   [P1]
-신규: IndicatorArrow.cs / TutorialSystem.cs
-  - [ ] IndicatorArrow: 보빙 Coroutine, 시야 판별                                    [P1]
-  - [ ] TutorialSystem: 10단계 상태 머신, DD1/DD2 이벤트 구독                       [P1]
+### [MODULE-15] ✓ MODULE-14에 흡수 완료 2026-05-17
 
-### [MODULE-16] SFXManager + 말풍선 UI                                                [P1]
-신규: SFXManager.cs / PrisonerBubbleUI.cs / PrisonCounterUI.cs
-  - [ ] SFXManager: null-safe PlayOneShot                                             [P1]
-  - [ ] PrisonerBubbleUI: 수량 TMP, No Cell 표시                                     [P1]
-  - [ ] PrisonCounterUI: OnPrisonCountChanged 구독, 색상 전환                        [P1]
+### [MODULE-16] ✓ MODULE-14에 흡수 완료 2026-05-17
 
 ### [MODULE-17] 조작 유도 UI + Physics Layer                                          [P2]
 신규: TutorialHandUI.cs
@@ -135,7 +135,9 @@
 ---
 
 ## NEXT_SESSION
-(없음)
+- [ ] [P1] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh, 회전 수정)
+- [ ] [P1] MODULE-11: MiningWorker FSM
+- [ ] [P1] MODULE-12: SalesWorker 루프
 
 ---
 
