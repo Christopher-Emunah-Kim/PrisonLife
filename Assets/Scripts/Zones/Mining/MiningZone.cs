@@ -23,6 +23,8 @@ public class MiningZone : BaseZone
     {
         base.OnPlayerEnter(player);
         _currentPlayer = player;
+        // 진입 시점에 현재 레벨 기준 MAX 적용 — 업그레이드 후 재진입 시 자동 갱신
+        player.Inventory.InitMaxValues(_miningLevel);
         ActivateMiningCollider(player, true);
     }
 
@@ -40,11 +42,12 @@ public class MiningZone : BaseZone
     {
         _miningLevel = newLevel;
 
+        // 플레이어가 Zone 안에 있으면 콜라이더 즉시 전환
         if (_currentPlayer != null)
         {
             ActivateMiningCollider(_currentPlayer, true);
-            _currentPlayer.Inventory.InitMaxValues(_miningLevel);
         }
+        // MAX 갱신은 다음 MiningZone 진입 시점에 적용 (OnPlayerEnter)
     }
 
     // ── GridCell 충돌 처리 ─────────────────────────────────

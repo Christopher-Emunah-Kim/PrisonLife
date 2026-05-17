@@ -1,8 +1,12 @@
 /// <summary>
 /// 부분 지불 업그레이드 Zone 공통 베이스. 잔액은 이탈 후에도 유지.
+/// 틱마다 돈 차감 성공 시 플레이어→Zone 방향 DOTween 흡수 연출 + 프로그레스바 갱신.
 /// 소유: DrillUpgradeZone, TractorUpgradeZone, MiningWorkerHireZone 등 (상속)
-/// 의존: BaseZone, PlayerCharacter, GameBalanceData
+/// 의존: BaseZone, PlayerCharacter, GameBalanceData, ResourceFlyObject, UpgradeProgressUI, DOTween
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 DOTween 돈 흡수 연출 추가 (ResourceFlyObject 풀링)
+/// 2026-05-17 UpgradeProgressUI 연동 추가
 using System.Collections;
 using UnityEngine;
 
@@ -10,17 +14,40 @@ public abstract class UpgradeZone : BaseZone
 {
     [SerializeField] protected float _tickInterval = 0.05f;
 
+    [Header("돈 흡수 연출")]
+    [SerializeField] private ResourceFlyObject _flyPrefab;
+    [SerializeField] private int               _flyPoolSize = 10;
+    [SerializeField] private float             _flyDuration = 0.3f;
+
+    [Header("프로그레스 UI")]
+    [SerializeField] private UpgradeProgressUI _progressUI;
+
     protected int  _totalCost;
     protected int  _remainingCost;
     protected bool _isCompleted;
 
+    private ObjectPool<ResourceFlyObject> _flyPool;
+
     protected abstract void InitCost();
     protected abstract void OnUpgradeCompleted();
 
+    protected virtual void Awake()
+    {
+        if (_flyPrefab != null)
+        {
+            _flyPool = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
+        }
+    }
+
     protected virtual void Start()
     {
-        InitCost(); //GameBalanceData참조 타이밍
+        InitCost();
         _remainingCost = _totalCost;
+
+        if (_progressUI != null)
+        {
+            _progressUI.Initialize(_totalCost);
+        }
     }
 
     public override void OnPlayerEnter(PlayerCharacter player)
@@ -46,7 +73,6 @@ public abstract class UpgradeZone : BaseZone
     {
         while (_remainingCost > 0)
         {
-            // 완료 플래그 재진입 방어
             if (_isCompleted)
             {
                 _tickCoroutine = null;
@@ -62,13 +88,15 @@ public abstract class UpgradeZone : BaseZone
                 yield break;
             }
 
-            // 돈 없으면 무시, 있으면 1씩 차감
             if (!player.Inventory.ConsumeMoney(1))
             {
                 continue;
             }
 
             _remainingCost--;
+
+            // 돈 차감 성공 → 흡수 연출 (플레이어 FlySocket → Zone 중심)
+            PlayFlyEffect(player.FlySocket.position, transform.position);
 
             OnCostChanged(_remainingCost);
 
@@ -82,6 +110,22 @@ public abstract class UpgradeZone : BaseZone
         }
     }
 
-    // 잔여 비용 변경 시 UI 갱신 — 하위 클래스에서 선택적 오버라이드
-    protected virtual void OnCostChanged(int remaining) { }
+    private void PlayFlyEffect(Vector3 from, Vector3 to)
+    {
+        if (_flyPool == null)
+        {
+            return;
+        }
+
+        ResourceFlyObject fly = _flyPool.Get();
+        fly.Fly(from, to, _flyDuration, () => _flyPool.Return(fly));
+    }
+
+    protected virtual void OnCostChanged(int remaining)
+    {
+        if (_progressUI != null)
+        {
+            _progressUI.UpdateProgress(remaining, _totalCost);
+        }
+    }
 }
