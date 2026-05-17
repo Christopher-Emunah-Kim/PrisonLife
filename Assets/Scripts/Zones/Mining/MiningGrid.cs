@@ -3,6 +3,8 @@
 /// 소유: 씬 MiningGrid 오브젝트
 /// 의존: GridCell, GameBalanceData
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 WaitForSeconds 캐싱 (_regenPollWait)
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +25,12 @@ public class MiningGrid : MonoBehaviour
 
     // 리젠 대기 중인 셀 큐 (셀, 리젠 완료 시각)
     private readonly Queue<(GridCell cell, float regenAt)> _regenQueue = new();
+    private WaitForSeconds _regenPollWait;
+
+    private void Awake()
+    {
+        _regenPollWait = new WaitForSeconds(_regenPollInterval);
+    }
 
     private void Start()
     {
@@ -82,7 +90,7 @@ public class MiningGrid : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(_regenPollInterval);
+            yield return _regenPollWait;
 
             while (_regenQueue.Count > 0 && _regenQueue.Peek().regenAt <= Time.time)
             {

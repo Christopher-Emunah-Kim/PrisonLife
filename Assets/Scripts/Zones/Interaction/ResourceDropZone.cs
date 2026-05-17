@@ -23,14 +23,15 @@ public class ResourceDropZone : InteractionZone
     [SerializeField] private float             _flyDuration = 0.4f;
 
     [Header("UI")]
-    [SerializeField] private MaxIndicatorUI _maxIndicatorUI;
+    [SerializeField] private GameObject _maxIndicator;
 
     private ObjectPool<StackMeshItem>    _bufferPool;
     private ObjectPool<ResourceFlyObject> _flyPool;
     private readonly List<StackMeshItem> _activeMeshes = new List<StackMeshItem>();
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _bufferPool = new ObjectPool<StackMeshItem>(_bufferMeshPrefab, _poolSize, transform);
         _flyPool    = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
     }
@@ -47,18 +48,18 @@ public class ResourceDropZone : InteractionZone
         // MAX 상태면 이탈 후에도 UI 유지
         if (ProductionManager.Instance.ResourceBuffer < ProductionManager.Instance.ResourceBufferMax)
         {
-            _maxIndicatorUI?.SetVisible(false);
+            _maxIndicator?.SetActive(false);
         }
     }
 
     private void OnEnable()
     {
-        ProductionManager.OnResourceBufferChanged += HandleResourceBufferChanged;
+        ProductionManager.Instance.OnResourceBufferChanged += HandleResourceBufferChanged;
     }
 
     private void OnDisable()
     {
-        ProductionManager.OnResourceBufferChanged -= HandleResourceBufferChanged;
+        ProductionManager.Instance.OnResourceBufferChanged -= HandleResourceBufferChanged;
     }
 
     private void HandleResourceBufferChanged(int count)
@@ -69,11 +70,11 @@ public class ResourceDropZone : InteractionZone
 
         if (count >= max)
         {
-            _maxIndicatorUI?.SetVisible(true);
+            _maxIndicator?.SetActive(true);
         }
         else
         {
-            _maxIndicatorUI?.SetVisible(false);
+            _maxIndicator?.SetActive(false);
         }
     }
 

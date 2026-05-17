@@ -3,6 +3,8 @@
 /// 소유: 씬 PrisonerSpawner GameObject
 /// 의존: ObjectPool<Prisoner>, PrisonerData, GameBalanceData, SalesZone
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 WaitForSeconds 캐싱 (_spawnWait, _queueArrivalWait)
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,10 +35,14 @@ public class PrisonerSpawner : MonoBehaviour
     public Prisoner FrontPrisoner => _waitingQueue.Count > 0 ? _waitingQueue[0] : null;
 
     private Coroutine _spawnCoroutine;
+    private WaitForSeconds _spawnWait;
+    private WaitForSeconds _queueArrivalWait;
 
     private void Awake()
     {
         _pool = new ObjectPool<Prisoner>(_prisonerPrefab, _poolSize, transform);
+        _spawnWait        = new WaitForSeconds(_prisonerData != null ? _prisonerData.spawnInterval : 3f);
+        _queueArrivalWait = new WaitForSeconds(0.1f);
     }
 
     private void Start()
@@ -57,7 +63,7 @@ public class PrisonerSpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(_prisonerData != null ? _prisonerData.spawnInterval : 3f);
+            yield return _spawnWait;
 
             if (IsQueueFull)
             {
@@ -107,7 +113,7 @@ public class PrisonerSpawner : MonoBehaviour
                 yield break;
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return _queueArrivalWait;
         }
     }
 

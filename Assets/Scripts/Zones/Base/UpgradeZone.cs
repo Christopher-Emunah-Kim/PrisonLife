@@ -7,6 +7,7 @@
 /// 수정 로그:
 /// 2026-05-17 DOTween 돈 흡수 연출 추가 (ResourceFlyObject 풀링)
 /// 2026-05-17 UpgradeProgressUI 연동 추가
+/// 2026-05-17 WaitForSeconds 캐싱 (_tickWait)
 using System.Collections;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ public abstract class UpgradeZone : BaseZone
     protected bool _isCompleted;
 
     private ObjectPool<ResourceFlyObject> _flyPool;
+    private WaitForSeconds _tickWait;
 
     protected abstract void InitCost();
     protected abstract void OnUpgradeCompleted();
@@ -37,6 +39,8 @@ public abstract class UpgradeZone : BaseZone
         {
             _flyPool = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
         }
+
+        _tickWait = new WaitForSeconds(_tickInterval);
     }
 
     protected virtual void Start()
@@ -79,7 +83,7 @@ public abstract class UpgradeZone : BaseZone
                 yield break;
             }
 
-            yield return new WaitForSeconds(_tickInterval);
+            yield return _tickWait;
 
             if (player == null)
             {

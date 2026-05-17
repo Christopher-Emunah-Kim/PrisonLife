@@ -5,6 +5,7 @@
 /// </summary>
 /// 수정 로그:
 /// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifySalesDeskZoneEntered() 연결
+/// 2026-05-17 AddGoodsFromWorker() 추가 — SalesWorker 적재 API
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ public class SalesDeskZone : InteractionZone
     [SerializeField] private float             _flyDuration = 0.4f;
 
     [Header("UI")]
-    [SerializeField] private MaxIndicatorUI _maxIndicatorUI;
+    [SerializeField] private GameObject _maxIndicator;
 
     private ObjectPool<StackMeshItem>     _deskPool;
     private ObjectPool<ResourceFlyObject> _flyPool;
@@ -37,8 +38,9 @@ public class SalesDeskZone : InteractionZone
     public int DeskGoods    => _deskGoods;
     public int SalesDeskMax => _balanceData != null ? _balanceData.salesDeskMax : 0;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _deskPool = new ObjectPool<StackMeshItem>(_deskMeshPrefab, _poolSize, transform);
         _flyPool  = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
     }
@@ -47,6 +49,14 @@ public class SalesDeskZone : InteractionZone
     {
         base.OnPlayerEnter(player);
         TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.SalesDesk);
+    }
+
+    /// <summary>SalesWorker가 적재 틱마다 호출 — 책상 재고 +1.</summary>
+    public void AddGoodsFromWorker(int amount)
+    {
+        _deskGoods = Mathf.Min(_deskGoods + amount, SalesDeskMax);
+        RefreshDeskMeshes();
+        UpdateMaxUI();
     }
 
     // SalesZone이 판매 틱마다 책상 재고 차감 시 호출
@@ -134,11 +144,11 @@ public class SalesDeskZone : InteractionZone
     {
         if (_deskGoods >= SalesDeskMax)
         {
-            _maxIndicatorUI?.SetVisible(true);
+            _maxIndicator?.SetActive(true);
         }
         else
         {
-            _maxIndicatorUI?.SetVisible(false);
+            _maxIndicator?.SetActive(false);
         }
     }
 

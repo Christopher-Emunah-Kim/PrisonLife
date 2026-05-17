@@ -27,15 +27,16 @@ public class GoodsPickupZone : InteractionZone
     [SerializeField] private float             _flyDuration = 0.4f;
 
     [Header("UI")]
-    [SerializeField] private MaxIndicatorUI _maxIndicatorUI;
+    [SerializeField] private GameObject _maxIndicator;
 
     private ObjectPool<StackMeshItem>     _bufferPool;
     private ObjectPool<ResourceFlyObject> _flyPool;
     private readonly List<StackMeshItem>  _activeMeshes = new List<StackMeshItem>();
     private bool                          _hasCompletedOnce;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _bufferPool = new ObjectPool<StackMeshItem>(_bufferMeshPrefab, _poolSize, transform);
         _flyPool    = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
     }
@@ -52,18 +53,18 @@ public class GoodsPickupZone : InteractionZone
         // MAX 상태면 이탈 후에도 UI 유지 — 플레이어가 가지러 올 수 있도록
         if (ProductionManager.Instance.GoodsBuffer < ProductionManager.Instance.GoodsBufferMax)
         {
-            _maxIndicatorUI?.SetVisible(false);
+            _maxIndicator?.SetActive(false);
         }
     }
 
     private void OnEnable()
     {
-        ProductionManager.OnGoodsBufferChanged += HandleGoodsBufferChanged;
+        ProductionManager.Instance.OnGoodsBufferChanged += HandleGoodsBufferChanged;
     }
 
     private void OnDisable()
     {
-        ProductionManager.OnGoodsBufferChanged -= HandleGoodsBufferChanged;
+        ProductionManager.Instance.OnGoodsBufferChanged -= HandleGoodsBufferChanged;
     }
 
     private void HandleGoodsBufferChanged(int count)
@@ -74,11 +75,11 @@ public class GoodsPickupZone : InteractionZone
 
         if (count >= max)
         {
-            _maxIndicatorUI?.SetVisible(true);
+            _maxIndicator?.SetActive(true);
         }
         else
         {
-            _maxIndicatorUI?.SetVisible(false);
+            _maxIndicator?.SetActive(false);
         }
     }
 
@@ -117,8 +118,6 @@ public class GoodsPickupZone : InteractionZone
             _hasCompletedOnce = true;
             OnGoodsPickupCompleted?.Invoke();
         }
-
-        ProductionManager.Instance.TryResumeProduction();
     }
 
     private void RefreshBufferMeshes(int count)

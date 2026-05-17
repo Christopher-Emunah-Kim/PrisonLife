@@ -3,12 +3,24 @@
 /// 소유: ResourceDropZone, GoodsPickupZone, SalesDeskZone 등 (상속)
 /// 의존: BaseZone, PlayerCharacter
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 WaitForSeconds 캐싱 (_tickWait)
+/// 2026-05-17 Awake virtual 선언 — 하위 클래스 base.Awake() 누락으로 _tickWait null 버그 수정
 using System.Collections;
 using UnityEngine;
 
 public abstract class InteractionZone : BaseZone
 {
-    [SerializeField] protected float _tickInterval = 0.1f;
+    [SerializeField] protected float _tickInterval = 0.66f;
+
+    private WaitForSeconds _tickWait;
+
+    protected virtual void Awake()
+    {
+        _tickWait = new WaitForSeconds(_tickInterval);
+    }
+
+    // 하위 클래스에서 Awake override 시 반드시 base.Awake() 호출 필요 — _tickWait 초기화 누락 방지
 
     public override void OnPlayerEnter(PlayerCharacter player)
     {
@@ -27,7 +39,7 @@ public abstract class InteractionZone : BaseZone
     {
         while (true)
         {
-            yield return new WaitForSeconds(_tickInterval);
+            yield return _tickWait;
 
             if (player == null)
             {

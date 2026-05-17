@@ -6,6 +6,7 @@
 /// 수정 로그:
 /// 2026-05-15 죄수 큐 조건은 MODULE-9 구현 후 연결 예정 (현재는 책상 재고 조건만 체크)
 /// 2026-05-16 MODULE-9 완료 — 죄수 큐 조건 연결, 감옥 이동 방향 SerializeField 추가
+/// 2026-05-17 WaitForSeconds 캐싱 (_salesTickWait)
 using System.Collections;
 using UnityEngine;
 
@@ -27,6 +28,12 @@ public class SalesZone : BaseZone
 
     // 트리거 안에 플레이어 또는 SalesWorker 존재 여부
     private bool _isOccupied;
+    private WaitForSeconds _salesTickWait;
+
+    private void Awake()
+    {
+        _salesTickWait = new WaitForSeconds(_salesTickInterval);
+    }
 
     public override void OnPlayerEnter(PlayerCharacter player)
     {
@@ -62,7 +69,7 @@ public class SalesZone : BaseZone
     {
         while (true)
         {
-            yield return new WaitForSeconds(_salesTickInterval);
+            yield return _salesTickWait;
 
             if (!_isOccupied)
             {

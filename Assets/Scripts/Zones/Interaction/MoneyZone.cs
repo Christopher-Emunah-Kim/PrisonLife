@@ -33,8 +33,9 @@ public class MoneyZone : InteractionZone
 
     private int _accumulatedMoney;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _flyPool   = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
         _moneyPool = new ObjectPool<StackMeshItem>(_moneyMeshPrefab, _poolSize, transform);
     }
