@@ -14,34 +14,6 @@
 ## ACTIVE_WORK
 <!-- 진행 중. 완료 FEATURE는 COMPLETED_LOG로 압축 이동 -->
 
-## [FEATURE] 컷씬 콜백 구조 + ShakeEffect | PLAN_CutsceneCallback_ShakeEffect_v1.0
-> 시작: 2026-05-17 | 기획서: 01_Overview.md, 07_Upgrade.md, 08_UI.md
-
-### [MODULE-A] ShakeEffect 신규 컴포넌트
-신규: Assets/Scripts/Util/ShakeEffect.cs
-  - [ ] ShakeEffect.cs — Play() / Loop() / Stop() API, Coroutine 참조 보관  [P0]
-
-### [MODULE-B] CameraController PlayCutscene API + 구독 제거
-수정: Assets/Scripts/Managers/CameraController.cs
-  - [ ] 이벤트 직접 구독 제거, PlayCutscene(Vector3, Action) 공개 API 추가  [P0]
-
-### [MODULE-C] UpgradeManager 컷씬 콜백 연동
-수정: Assets/Scripts/Managers/UpgradeManager.cs
-  - [ ] HandleFirstSaleCompleted / HandlePrisonFull / NotifyDrillCompleted → PlayCutscene + 콜백으로 교체 [P0]
-
-### [MODULE-D] ProductionManager ShakeEffect 연동
-수정: Assets/Scripts/Managers/ProductionManager.cs
-  - [ ] Loop() / Stop() 연동                                                  [P1]
-
-### [MODULE-E] PrisonZone ShakeEffect 연동
-수정: Assets/Scripts/Zones/Prison/PrisonZone.cs
-  - [ ] HandlePrisonFull → Play() 연동                                        [P1]
-
-### [MODULE-F] PrisonExpandZone 컷씬 연동 (확장 → GameEndUI 전 컷씬)
-수정: Assets/Scripts/Zones/Upgrade/PrisonExpandZone.cs
-  - [ ] SwapFence() 즉시 → PlayCutscene → 완료 콜백에서 ExpandCapacity() 호출 [P0]
-
----
 
 ## [FEATURE] PrisonLife 전체 구현 | PLAN_PrisonLife_v1.0
 > 시작: 2026-05-12 | 기획서: 01~09_*.md | Phase 1 진행 중
@@ -216,6 +188,7 @@
 ---
 
 ## COMPLETED_LOG
+[x] 컷씬 콜백 구조 + ShakeEffect | 96b642f,c6f85a3,a9f98e9 | 2026-05-18 | PLAN_CutsceneCallback_ShakeEffect_v1.0
 [x] Painter06 HomingBounce Lifetime 연장 — 유도 전 소멸 수정 | 0cbfc7167 | 2026-05-06 | ad-hoc
 [x] LevelUpSubsystem 재초기화 버그픽스 (EXP 구독 누락) | 6aaad8f19 | 2026-05-06 | PLAN_LevelUpSubsystemReinit_v1.0
 [x] PullVortexActor FX 스폰 Z 오프셋 보정 | 467f7f0c3 | 2026-05-06 | PLAN_PullVortexFXZOffset_v1.0

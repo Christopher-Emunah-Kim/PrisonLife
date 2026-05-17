@@ -16,7 +16,7 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 ```yaml
 - date: 2026-05-17
   plan: PLAN_CutsceneCallback_ShakeEffect_v1.0
-  commit: ""
+  commit: "96b642f(CutsceneCallback) c6f85a3(ShakeEffect) a9f98e9(refactor-GC) 5316eb5(docs)"
   files:
     created:
       - Assets/Scripts/Util/ShakeEffect.cs
@@ -26,8 +26,11 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
       - Assets/Scripts/Managers/ProductionManager.cs
       - Assets/Scripts/Zones/Prison/PrisonZone.cs
       - Assets/Scripts/Zones/Upgrade/PrisonExpandZone.cs
-  summary: "컷씬 완료 후 Zone 활성화 콜백 구조 + ShakeEffect 공용 컴포넌트 (생산 라인/감옥 진동) + PrisonExpand → GameEndUI 순서 보장"
-  status: PENDING_COMMIT
+      - Assets/Scripts/Zones/Mining/GridCell.cs
+      - Assets/Scripts/Zones/Mining/MiningZone.cs
+      - Assets/Scripts/Characters/Player/InventoryComponent.cs
+  summary: "컷씬 완료 후 Zone 활성화 콜백 구조 + ShakeEffect 공용 컴포넌트 (생산 라인/감옥 진동) + PrisonExpand → GameEndUI 순서 보장 + GC 최적화"
+  status: COMMITTED
   bugs_found: []
   bugs_fixed: []
 ```
