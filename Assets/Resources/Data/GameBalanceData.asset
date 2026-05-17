@@ -17,19 +17,19 @@ MonoBehaviour:
   - tickInterval: 0.5
     backpackMax: 20
   - tickInterval: 0.33
-    backpackMax: 30
+    backpackMax: 45
   - tickInterval: 0.17
-    backpackMax: 60
+    backpackMax: 80
   miningRegenTime: 3
   resourceBufferMax: 30
   goodsBufferMax: 20
   productionTime: 1
   salesDeskMax: 30
   goodsPrice: 2
-  drillUpgradeCost: 50
-  tractorUpgradeCost: 150
-  miningWorkerCost: 100
-  salesWorkerCost: 80
-  prisonExpandCost: 200
+  drillUpgradeCost: 25
+  tractorUpgradeCost: 50
+  miningWorkerCost: 40
+  salesWorkerCost: 50
+  prisonExpandCost: 50
   prisonInitialCapacity: 20
   prisonExpandedCapacity: 40

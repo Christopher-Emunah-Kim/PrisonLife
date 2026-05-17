@@ -12,6 +12,42 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 
 ---
 
+## PrisonLife — MODULE-10 (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_PrisonLife_v1.0
+  commit: "b21555f(refactor-Zones) 40efd36(UpgradeManager) c3a2442(DrillUpgradeZone) e063432(UpgradeProgressUI)"
+  files:
+    created:
+      - Assets/Scripts/Zones/Upgrade/DrillUpgradeZone.cs    # MiningLevel(1) + NotifyDrillCompleted()
+      - Assets/Scripts/Zones/Upgrade/TractorUpgradeZone.cs  # MiningLevel(2), SetActive(false)
+      - Assets/Scripts/Zones/Upgrade/MiningWorkerHireZone.cs # 채굴 인부 3명 스폰
+      - Assets/Scripts/Zones/Upgrade/SalesWorkerHireZone.cs  # 판매 인부 1명 스폰
+      - Assets/Scripts/Zones/Upgrade/PrisonExpandZone.cs    # ExpandCapacity() + FenceSwap
+      - Assets/Scripts/Managers/UpgradeManager.cs           # Zone 활성화 순서 제어 싱글톤
+      - Assets/Scripts/UI/UpgradeProgressUI.cs              # World Space 프로그레스바 UI
+    moved:
+      - Zones/*.cs → Zones/Base/ Mining/ Interaction/ Sales/ Prison/ Upgrade/ (도메인 분리)
+    modified:
+      - Assets/Scripts/Zones/Base/UpgradeZone.cs            # DOTween 흡수 연출 + UpgradeProgressUI 연동
+      - Assets/Scripts/Zones/Mining/MiningZone.cs           # OnPlayerEnter 시 InitMaxValues 적용
+      - Assets/Scripts/Managers/GameManager.cs              # 업그레이드 Zone 레퍼런스 제거 (SRP)
+      - Assets/Resources/Data/GameBalanceData.asset
+      - Assets/Scenes/PlayScene.unity
+  summary: "MODULE-10: UpgradeZone 5종 + UpgradeManager + 폴더 구조 개편 + UpgradeProgressUI"
+  status: COMMITTED
+  bugs_found:
+    - "PowerShell 파일 이동 시 Unity GUID 재발급 → Script Missing"
+    - "DrillUpgradeZone SetActive 후 자식 비활성 상태로 미표시"
+    - "MiningZone.UpgradeMiningLevel 시점에 플레이어 Zone 이탈 → InitMaxValues 미적용"
+  bugs_fixed:
+    - "git show HEAD:path.meta로 원본 GUID 복원 (15개 파일)"
+    - "사용자가 Inspector에서 자식 오브젝트 직접 활성화"
+    - "InitMaxValues를 OnPlayerEnter 진입 시점으로 이전"
+```
+
+---
+
 ## PrisonLife — MODULE-9 (2026-05-17)
 ```yaml
 - date: 2026-05-17

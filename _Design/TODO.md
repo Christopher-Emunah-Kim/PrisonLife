@@ -80,14 +80,19 @@
   - [x] SalesZone: 죄수 큐 조건 연결, 틱마다 1개씩 처리
   - [x] [에디터] Prisoner Prefab + 씬 배치 완료
 
-### [MODULE-10] UpgradeZone 5종
-신규: DrillUpgradeZone.cs / TractorUpgradeZone.cs / TractorColliderController.cs / MiningWorkerHireZone.cs / SalesWorkerHireZone.cs / PrisonExpandZone.cs
-  - [ ] DrillUpgradeZone: 2단계 전환, TractorUpgradeZone.SetActive                  [P0]
-  - [ ] TractorUpgradeZone: 3단계 전환                                               [P0]
-  - [ ] TractorColliderController: 별도 컴포넌트, Enable/Disable 제어               [P0]
-  - [ ] MiningWorkerHireZone: MiningWorker 3명 스폰                                  [P0]
-  - [ ] SalesWorkerHireZone: SalesWorker 1명 스폰                                    [P0]
-  - [ ] PrisonExpandZone: ExpandCapacity(40), GameManager.TriggerGameEnd()           [P0]
+### [MODULE-10] ✓ COMMITTED b21555f,40efd36,c3a2442,e063432 2026-05-17
+신규: DrillUpgradeZone.cs / TractorUpgradeZone.cs / MiningWorkerHireZone.cs / SalesWorkerHireZone.cs / PrisonExpandZone.cs / UpgradeManager.cs
+  - [x] Zones/ → Base/ Mining/ Interaction/ Sales/ Prison/ Upgrade/ 도메인 분리      [P0]
+  - [x] UpgradeManager: 첫판매→Drill/HireZone 활성화, PrisonFull→Expand 활성화, NotifyDrillCompleted [P0]
+  - [x] DrillUpgradeZone: MiningLevel(1) 전환, UpgradeManager.NotifyDrillCompleted() [P0]
+  - [x] TractorUpgradeZone: MiningLevel(2) 전환, gameObject.SetActive(false)          [P0]
+  - [x] MiningWorkerHireZone: MiningWorker 3명 스폰 (Prefab 연결 시)                 [P0]
+  - [x] SalesWorkerHireZone: SalesWorker 1명 스폰 (Prefab 연결 시)                   [P0]
+  - [x] PrisonExpandZone: ExpandCapacity() + FenceOriginal↔FenceExpanded 교체        [P0]
+  - [x] GameManager: 업그레이드 레퍼런스 제거, UpgradeManager에 위임                 [P0]
+  - [x] UpgradeZone: DOTween 흡수 연출 + UpgradeProgressUI 연동                      [P0]
+  - [x] MiningZone: OnPlayerEnter 시 InitMaxValues 적용 (업그레이드 후 재진입 시 자동 갱신) [P0]
+  - [~] TractorColliderController: MiningColliderBridge로 통합 결정 — 불필요          [P0]
 
 ### [MODULE-13] ✓ COMMITTED 7f15f53 2026-05-14
 신규: CameraController.cs
