@@ -1,29 +1,19 @@
 /// <summary>
 /// 플레이어 소지금을 관리하고 변경 이벤트를 발행하는 금전 관리자.
 /// 소유: MoneyZone (Add 호출), UpgradeZone (Spend 호출)
-/// 의존: 없음
+/// 의존: Singleton<T>
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using System;
 using UnityEngine;
 
-public class MoneyManager : MonoBehaviour
+public class MoneyManager : Singleton<MoneyManager>
 {
-    public static event Action<int> OnMoneyChanged;
-
-    public static MoneyManager Instance { get; private set; }
+    public event Action<int> OnMoneyChanged;
 
     private int _currentMoney;
     public int CurrentMoney => _currentMoney;
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     public void Add(int amount)
     {
@@ -31,7 +21,7 @@ public class MoneyManager : MonoBehaviour
         {
             return;
         }
-        
+
         _currentMoney += amount;
         OnMoneyChanged?.Invoke(_currentMoney);
     }
@@ -42,7 +32,7 @@ public class MoneyManager : MonoBehaviour
         {
             return false;
         }
-        
+
         _currentMoney -= amount;
         OnMoneyChanged?.Invoke(_currentMoney);
         return true;

@@ -42,7 +42,12 @@ public class MiningWorkerHireZone : UpgradeZone
                 ? _spawnPoints[i].position
                 : transform.position;
 
-            Instantiate(_workerPrefab, pos, Quaternion.identity);
+            GameObject obj    = Instantiate(_workerPrefab, pos, Quaternion.identity);
+            MiningWorker worker = obj.GetComponent<MiningWorker>();
+            if (worker != null)
+            {
+                worker.Init(_balanceData);
+            }
         }
 
         Logger.Log("MiningWorkerHireZone", $"MiningWorker {spawnCount}명 스폰 완료");

@@ -1,24 +1,24 @@
 /// <summary>
 /// null-safe AudioSource.PlayOneShot 래퍼. 에셋 없으면 무시.
 /// 소유: HUDController (음소거 연동)
-/// 의존: 없음
+/// 의존: Singleton<T>
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using UnityEngine;
 
-public class SFXManager : MonoBehaviour
+public class SFXManager : Singleton<SFXManager>
 {
-    public static SFXManager Instance { get; private set; }
-
     [SerializeField] private AudioSource _audioSource;
 
     [Header("SFX 클립 (없으면 무시)")]
     [SerializeField] private AudioClip _miningClip;
-    [SerializeField] private AudioClip _resourceDropClip;    // 자원 → 버퍼 투입
-    [SerializeField] private AudioClip _goodsPickupClip;     // 완제품 버퍼 → 쟁반 픽업
-    [SerializeField] private AudioClip _goodsDropOffClip;    // 쟁반 → 판매 책상 내려놓기
+    [SerializeField] private AudioClip _resourceDropClip;
+    [SerializeField] private AudioClip _goodsPickupClip;
+    [SerializeField] private AudioClip _goodsDropOffClip;
     [SerializeField] private AudioClip _productionClip;
     [SerializeField] private AudioClip _salesClip;
-    [SerializeField] private AudioClip _upgradePayClip;      // 업그레이드 돈 투입 틱
+    [SerializeField] private AudioClip _upgradePayClip;
     [SerializeField] private AudioClip _upgradeCompleteClip;
     [SerializeField] private AudioClip _moneyReceiveClip;
 
@@ -32,16 +32,6 @@ public class SFXManager : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float _upgradePayVolume      = 0.3f;
     [SerializeField] [Range(0f, 1f)] private float _upgradeCompleteVolume = 1f;
     [SerializeField] [Range(0f, 1f)] private float _moneyReceiveVolume    = 1f;
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     public void PlayMining()           => Play(_miningClip,          _miningVolume);
     public void PlayResourceDrop()     => Play(_resourceDropClip,    _resourceDropVolume);

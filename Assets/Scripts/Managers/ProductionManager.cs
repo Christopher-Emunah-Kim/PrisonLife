@@ -1,44 +1,40 @@
 /// <summary>
 /// 자원 버퍼 → 생산 Coroutine → 완제품 버퍼 흐름을 관리하는 생산 관리자.
 /// 소유: GameManager (초기화), ResourceDropZone / GoodsPickupZone (버퍼 조작)
-/// 의존: GameBalanceData
+/// 의존: GameBalanceData, Singleton<T>
 /// </summary>
 /// 수정 로그:
 /// 2026-05-14 ResourceBufferMax / GoodsBufferMax 프로퍼티 추가 (ResourceDropZone, GoodsPickupZone 참조)
 /// 2026-05-17 생산 완료 시 SFXManager.PlayProduction() 추가
+/// 2026-05-17 WaitForSeconds 캐싱 (_productionWait)
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using System;
 using System.Collections;
 using UnityEngine;
 
-public class ProductionManager : MonoBehaviour
+public class ProductionManager : Singleton<ProductionManager>
 {
     // int: 변경 후 버퍼 수량 (DD5 — SalesWorker 대기 판단용)
-    public static event Action<int> OnGoodsBufferChanged;
-    public static event Action<int> OnResourceBufferChanged;
-    public static event Action      OnProductionStarted;
-    public static event Action      OnProductionStopped;
-
-    public static ProductionManager Instance { get; private set; }
+    public event Action<int> OnGoodsBufferChanged;
+    public event Action<int> OnResourceBufferChanged;
+    public event Action      OnProductionStarted;
+    public event Action      OnProductionStopped;
 
     [SerializeField] private GameBalanceData _balanceData;
 
-    private int _resourceBuffer;
-    private int _goodsBuffer;
-    private Coroutine _productionCoroutine;
+    private int            _resourceBuffer;
+    private int            _goodsBuffer;
+    private Coroutine      _productionCoroutine;
+    private WaitForSeconds _productionWait;
 
     public int ResourceBuffer    => _resourceBuffer;
     public int ResourceBufferMax => _balanceData != null ? _balanceData.resourceBufferMax : 0;
     public int GoodsBuffer       => _goodsBuffer;
     public int GoodsBufferMax    => _balanceData != null ? _balanceData.goodsBufferMax : 0;
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
+        _productionWait = new WaitForSeconds(_balanceData != null ? _balanceData.productionTime : 1f);
     }
 
     // 채굴 Zone / MiningWorker가 자원 투입 시 호출
@@ -48,7 +44,7 @@ public class ProductionManager : MonoBehaviour
         {
             return false;
         }
-        
+
         _resourceBuffer = Mathf.Min(_resourceBuffer + amount, _balanceData.resourceBufferMax);
         OnResourceBufferChanged?.Invoke(_resourceBuffer);
 
@@ -68,8 +64,10 @@ public class ProductionManager : MonoBehaviour
             Logger.Warn("ProductionManager", "ConsumeGoods 호출 시 goodsBuffer 부족");
             return false;
         }
+
         _goodsBuffer -= amount;
         OnGoodsBufferChanged?.Invoke(_goodsBuffer);
+        TryResumeProduction();
         return true;
     }
 
@@ -91,7 +89,7 @@ public class ProductionManager : MonoBehaviour
                 yield break;
             }
 
-            yield return new WaitForSeconds(_balanceData.productionTime);
+            yield return _productionWait;
 
             _resourceBuffer--;
             OnResourceBufferChanged?.Invoke(_resourceBuffer);
@@ -115,10 +113,12 @@ public class ProductionManager : MonoBehaviour
         {
             return;
         }
+
         if (_resourceBuffer <= 0 || _goodsBuffer >= _balanceData.goodsBufferMax)
         {
             return;
         }
+
         _productionCoroutine = StartCoroutine(ProductionRoutine());
     }
 }

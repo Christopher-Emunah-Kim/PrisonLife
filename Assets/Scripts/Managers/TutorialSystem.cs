@@ -5,9 +5,10 @@
 /// </summary>
 /// 수정 로그:
 /// 2026-05-17 ETutorialID 기반으로 전면 재작성 — 이벤트 구독 제거, Zone 진입 기준 통일
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using UnityEngine;
 
-public class TutorialSystem : MonoBehaviour
+public class TutorialSystem : Singleton<TutorialSystem>
 {
     public enum ETutorialID
     {
@@ -18,8 +19,6 @@ public class TutorialSystem : MonoBehaviour
         Money, 
         Done
     }
-
-    public static TutorialSystem Instance { get; private set; }
 
     [Header("플레이어 참조")]
     [SerializeField] private Transform _playerTransform;
@@ -43,16 +42,6 @@ public class TutorialSystem : MonoBehaviour
 
     private ETutorialID _currentID = ETutorialID.Mining;
     private bool        _playerArrowEnabled;
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     private void Start()
     {

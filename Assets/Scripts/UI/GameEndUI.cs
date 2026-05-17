@@ -28,12 +28,12 @@ public class GameEndUI : MonoBehaviour
 
     private void OnEnable()
     {
-        PrisonManager.OnPrisonExpanded += HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
     }
 
     private void OnDisable()
     {
-        PrisonManager.OnPrisonExpanded -= HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
     }
 
     private void HandlePrisonExpanded()

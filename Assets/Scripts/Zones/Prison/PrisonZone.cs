@@ -33,14 +33,14 @@ public class PrisonZone : MonoBehaviour
 
     private void OnEnable()
     {
-        PrisonManager.OnPrisonFull     += HandlePrisonFull;
-        PrisonManager.OnPrisonExpanded += HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonFull     += HandlePrisonFull;
+        PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
     }
 
     private void OnDisable()
     {
-        PrisonManager.OnPrisonFull     -= HandlePrisonFull;
-        PrisonManager.OnPrisonExpanded -= HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonFull     -= HandlePrisonFull;
+        PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
     }
 
     private void OnTriggerEnter(Collider other)

@@ -25,12 +25,12 @@ public class PrisonCounterUI : MonoBehaviour
 
     private void OnEnable()
     {
-        PrisonManager.OnPrisonCountChanged += HandlePrisonCountChanged;
+        PrisonManager.Instance.OnPrisonCountChanged += HandlePrisonCountChanged;
     }
 
     private void OnDisable()
     {
-        PrisonManager.OnPrisonCountChanged -= HandlePrisonCountChanged;
+        PrisonManager.Instance.OnPrisonCountChanged -= HandlePrisonCountChanged;
     }
 
     private void Start()

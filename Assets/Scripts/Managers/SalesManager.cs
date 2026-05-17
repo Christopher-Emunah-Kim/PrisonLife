@@ -1,29 +1,19 @@
 /// <summary>
 /// 판매 완료 이벤트 및 첫 판매 트리거를 발행하는 판매 관리자.
 /// 소유: SalesZone (판매 틱 완료 시 호출)
-/// 의존: 없음 (이벤트 발행 전용)
+/// 의존: Singleton<T>
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using System;
 using UnityEngine;
 
-public class SalesManager : MonoBehaviour
+public class SalesManager : Singleton<SalesManager>
 {
-    public static event Action OnSalesCompleted;
-    public static event Action OnFirstSaleCompleted;
-
-    public static SalesManager Instance { get; private set; }
+    public event Action OnSalesCompleted;
+    public event Action OnFirstSaleCompleted;
 
     private bool _firstSaleDone;
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
 
     // SalesZone이 판매 1회 완료 시 호출
     public void NotifySaleCompleted()

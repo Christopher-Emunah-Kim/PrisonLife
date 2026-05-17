@@ -34,12 +34,12 @@ public class HUDController : MonoBehaviour
 
     private void OnEnable()
     {
-        MoneyManager.OnMoneyChanged += HandleMoneyChanged;
+        MoneyManager.Instance.OnMoneyChanged += HandleMoneyChanged;
     }
 
     private void OnDisable()
     {
-        MoneyManager.OnMoneyChanged -= HandleMoneyChanged;
+        MoneyManager.Instance.OnMoneyChanged -= HandleMoneyChanged;
     }
 
     private void Start()

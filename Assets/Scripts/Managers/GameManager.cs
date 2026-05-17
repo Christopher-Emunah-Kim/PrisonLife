@@ -6,36 +6,24 @@
 /// </summary>
 /// 수정 로그:
 /// 2026-05-17 업그레이드 Zone 레퍼런스를 UpgradeManager로 이전
+/// 2026-05-17 Singleton<T> 베이스 클래스 적용
 using System;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static event Action OnGameEnded;
-
-    public static GameManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-    }
+    public event Action OnGameEnded;
 
     private void OnEnable()
     {
-        PrisonManager.OnPrisonExpanded += HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
     }
 
     private void OnDisable()
     {
-        PrisonManager.OnPrisonExpanded -= HandlePrisonExpanded;
+        PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
     }
 
-    // 감옥 확장 완료 → 게임 종료
     private void HandlePrisonExpanded()
     {
         TriggerGameEnd();

@@ -33,7 +33,12 @@ public class SalesWorkerHireZone : UpgradeZone
         }
 
         Vector3 pos = (_spawnPoint != null) ? _spawnPoint.position : transform.position;
-        Instantiate(_workerPrefab, pos, Quaternion.identity);
+        GameObject obj    = Instantiate(_workerPrefab, pos, Quaternion.identity);
+        SalesWorker worker = obj.GetComponent<SalesWorker>();
+        if (worker != null)
+        {
+            worker.Init(_balanceData);
+        }
 
         Logger.Log("SalesWorkerHireZone", "SalesWorker 1명 스폰 완료");
     }

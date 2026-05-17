@@ -27,14 +27,14 @@ public class CameraController : MonoBehaviour
 
     private void OnEnable()
     {
-        SalesManager.OnFirstSaleCompleted += HandleFirstSaleCompleted;
-        PrisonManager.OnPrisonFull        += HandlePrisonFull;
+        SalesManager.Instance.OnFirstSaleCompleted += HandleFirstSaleCompleted;
+        PrisonManager.Instance.OnPrisonFull        += HandlePrisonFull;
     }
 
     private void OnDisable()
     {
-        SalesManager.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
-        PrisonManager.OnPrisonFull        -= HandlePrisonFull;
+        SalesManager.Instance.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
+        PrisonManager.Instance.OnPrisonFull        -= HandlePrisonFull;
     }
 
     private void LateUpdate()
