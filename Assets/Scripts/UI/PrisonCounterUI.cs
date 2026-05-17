@@ -23,18 +23,21 @@ public class PrisonCounterUI : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        PrisonManager.Instance.OnPrisonCountChanged += HandlePrisonCountChanged;
-    }
-
     private void OnDisable()
     {
-        PrisonManager.Instance.OnPrisonCountChanged -= HandlePrisonCountChanged;
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonCountChanged -= HandlePrisonCountChanged;
+        }
     }
 
     private void Start()
     {
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonCountChanged += HandlePrisonCountChanged;
+        }
+
         // 초기값 표시
         if (PrisonManager.Instance != null)
         {

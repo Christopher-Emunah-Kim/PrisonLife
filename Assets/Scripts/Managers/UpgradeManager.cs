@@ -24,16 +24,30 @@ public class UpgradeManager : Singleton<UpgradeManager>
     [Header("감옥 만원 시 활성화")]
     [SerializeField] private GameObject _prisonExpandZone;
 
-    private void OnEnable()
+    private void Start()
     {
-        SalesManager.Instance.OnFirstSaleCompleted += HandleFirstSaleCompleted;
-        PrisonManager.Instance.OnPrisonFull        += HandlePrisonFull;
+        if (SalesManager.Instance != null)
+        {
+            SalesManager.Instance.OnFirstSaleCompleted += HandleFirstSaleCompleted;
+        }
+
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull += HandlePrisonFull;
+        }
     }
 
     private void OnDisable()
     {
-        SalesManager.Instance.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
-        PrisonManager.Instance.OnPrisonFull        -= HandlePrisonFull;
+        if (SalesManager.Instance != null)
+        {
+            SalesManager.Instance.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
+        }
+
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull -= HandlePrisonFull;
+        }
     }
 
     private void HandleFirstSaleCompleted()

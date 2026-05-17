@@ -32,14 +32,12 @@ public class HUDController : MonoBehaviour
         ApplySafeArea();
     }
 
-    private void OnEnable()
-    {
-        MoneyManager.Instance.OnMoneyChanged += HandleMoneyChanged;
-    }
-
     private void OnDisable()
     {
-        MoneyManager.Instance.OnMoneyChanged -= HandleMoneyChanged;
+        if (MoneyManager.Instance != null)
+        {
+            MoneyManager.Instance.OnMoneyChanged -= HandleMoneyChanged;
+        }
     }
 
     private void Start()
@@ -47,9 +45,9 @@ public class HUDController : MonoBehaviour
         _playButton.onClick.AddListener(OnPlayButtonClicked);
         _muteButton.onClick.AddListener(OnMuteButtonClicked);
 
-        // 초기 소지금 표시
         if (MoneyManager.Instance != null)
         {
+            MoneyManager.Instance.OnMoneyChanged += HandleMoneyChanged;
             UpdateMoneyText(MoneyManager.Instance.CurrentMoney);
         }
 

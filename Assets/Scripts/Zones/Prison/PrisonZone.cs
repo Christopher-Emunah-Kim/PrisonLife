@@ -31,16 +31,22 @@ public class PrisonZone : MonoBehaviour
         SpawnAllMeshes();
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        PrisonManager.Instance.OnPrisonFull     += HandlePrisonFull;
-        PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull     += HandlePrisonFull;
+            PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
+        }
     }
 
     private void OnDisable()
     {
-        PrisonManager.Instance.OnPrisonFull     -= HandlePrisonFull;
-        PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull     -= HandlePrisonFull;
+            PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

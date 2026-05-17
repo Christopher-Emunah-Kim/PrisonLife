@@ -25,16 +25,30 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        SalesManager.Instance.OnFirstSaleCompleted += HandleFirstSaleCompleted;
-        PrisonManager.Instance.OnPrisonFull        += HandlePrisonFull;
+        if (SalesManager.Instance != null)
+        {
+            SalesManager.Instance.OnFirstSaleCompleted += HandleFirstSaleCompleted;
+        }
+
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull += HandlePrisonFull;
+        }
     }
 
     private void OnDisable()
     {
-        SalesManager.Instance.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
-        PrisonManager.Instance.OnPrisonFull        -= HandlePrisonFull;
+        if (SalesManager.Instance != null)
+        {
+            SalesManager.Instance.OnFirstSaleCompleted -= HandleFirstSaleCompleted;
+        }
+
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonFull -= HandlePrisonFull;
+        }
     }
 
     private void LateUpdate()

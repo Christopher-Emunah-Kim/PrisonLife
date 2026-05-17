@@ -14,14 +14,20 @@ public class GameManager : Singleton<GameManager>
 {
     public event Action OnGameEnded;
 
-    private void OnEnable()
+    private void Start()
     {
-        PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonExpanded += HandlePrisonExpanded;
+        }
     }
 
     private void OnDisable()
     {
-        PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
+        if (PrisonManager.Instance != null)
+        {
+            PrisonManager.Instance.OnPrisonExpanded -= HandlePrisonExpanded;
+        }
     }
 
     private void HandlePrisonExpanded()

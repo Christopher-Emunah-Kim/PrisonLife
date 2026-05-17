@@ -57,14 +57,21 @@ public class GoodsPickupZone : InteractionZone
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        ProductionManager.Instance.OnGoodsBufferChanged += HandleGoodsBufferChanged;
+        if (ProductionManager.Instance != null)
+        {
+            ProductionManager.Instance.OnGoodsBufferChanged += HandleGoodsBufferChanged;
+            HandleGoodsBufferChanged(ProductionManager.Instance.GoodsBuffer);
+        }
     }
 
     private void OnDisable()
     {
-        ProductionManager.Instance.OnGoodsBufferChanged -= HandleGoodsBufferChanged;
+        if (ProductionManager.Instance != null)
+        {
+            ProductionManager.Instance.OnGoodsBufferChanged -= HandleGoodsBufferChanged;
+        }
     }
 
     private void HandleGoodsBufferChanged(int count)

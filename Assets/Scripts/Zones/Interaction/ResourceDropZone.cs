@@ -52,14 +52,21 @@ public class ResourceDropZone : InteractionZone
         }
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        ProductionManager.Instance.OnResourceBufferChanged += HandleResourceBufferChanged;
+        if (ProductionManager.Instance != null)
+        {
+            ProductionManager.Instance.OnResourceBufferChanged += HandleResourceBufferChanged;
+            HandleResourceBufferChanged(ProductionManager.Instance.ResourceBuffer);
+        }
     }
 
     private void OnDisable()
     {
-        ProductionManager.Instance.OnResourceBufferChanged -= HandleResourceBufferChanged;
+        if (ProductionManager.Instance != null)
+        {
+            ProductionManager.Instance.OnResourceBufferChanged -= HandleResourceBufferChanged;
+        }
     }
 
     private void HandleResourceBufferChanged(int count)
