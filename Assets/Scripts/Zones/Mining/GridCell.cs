@@ -3,6 +3,8 @@
 /// 소유: MiningGrid
 /// 의존: DOTween, GameBalanceData (리젠 시간은 MiningGrid가 관리)
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 Mine() OnComplete 람다 → DisableSelf 메서드 참조로 교체 (GC 클로저 할당 방지)
 using System.Collections;
 using UnityEngine;
 using DG.Tweening;
@@ -51,8 +53,10 @@ public class GridCell : MonoBehaviour
 
         transform.DOScale(Vector3.zero, _scaleDownDuration)
             .SetEase(Ease.InBack)
-            .OnComplete(() => gameObject.SetActive(false));
+            .OnComplete(DisableSelf);
     }
+
+    private void DisableSelf() => gameObject.SetActive(false);
 
     // ── 리젠 ─────────────────────────────────────────────
 

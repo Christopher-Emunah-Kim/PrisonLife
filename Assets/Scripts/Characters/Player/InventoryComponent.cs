@@ -7,6 +7,7 @@
 /// 2026-05-14 백팩 자원/돈 적층 메시 + 쟁반 메시 ON/OFF 로직 추가
 /// 2026-05-15 소켓 3개 + 단일 프리팹 방식으로 교체, ObjectPool 적용
 /// 2026-05-17 ConsumeMoney에서 MoneyManager.Spend 연동 — HUD 갱신 누락 수정
+/// 2026-05-17 MaxIndicator 추가 — 어떤 슬롯이든 가득 찰 때 표시
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,6 +30,9 @@ public class InventoryComponent : MonoBehaviour
     [SerializeField] private float       _stackHeight = 0.2f;
     [SerializeField] private int         _meshUnit    = 5;
     [SerializeField] private int         _poolSize    = 16;
+
+    [Header("UI")]
+    [SerializeField] private GameObject _maxIndicator;
 
     // 백팩: slot[0]=자원, slot[1]=돈
     private int[] _backpackSlots = new int[2];
@@ -93,6 +97,7 @@ public class InventoryComponent : MonoBehaviour
 
         _backpackSlots[0] = Mathf.Min(_backpackSlots[0] + amount, _backpackMax[0]);
         RefreshBackpackMeshes();
+        RefreshMaxIndicator();
 
         // DD1: 최초 1회만 발행, 리셋 없음
         if (!_halfFullFired && _backpackSlots[0] >= _backpackMax[0] / 2)
@@ -114,6 +119,7 @@ public class InventoryComponent : MonoBehaviour
 
         _backpackSlots[0] -= amount;
         RefreshBackpackMeshes();
+        RefreshMaxIndicator();
         return true;
     }
 
@@ -131,6 +137,7 @@ public class InventoryComponent : MonoBehaviour
 
         _backpackSlots[1] = Mathf.Min(_backpackSlots[1] + amount, _backpackMax[1]);
         RefreshBackpackMeshes();
+        RefreshMaxIndicator();
         return true;
     }
 
@@ -144,6 +151,7 @@ public class InventoryComponent : MonoBehaviour
 
         _backpackSlots[1] -= amount;
         RefreshBackpackMeshes();
+        RefreshMaxIndicator();
         MoneyManager.Instance?.Subtract(amount);
         return true;
     }
@@ -162,6 +170,7 @@ public class InventoryComponent : MonoBehaviour
 
         _traySlots[0] = Mathf.Min(_traySlots[0] + amount, _trayMax);
         RefreshTrayMeshes();
+        RefreshMaxIndicator();
         return true;
     }
 
@@ -175,10 +184,21 @@ public class InventoryComponent : MonoBehaviour
 
         _traySlots[0] -= amount;
         RefreshTrayMeshes();
+        RefreshMaxIndicator();
         return true;
     }
 
     public bool IsGoodsFull() => _traySlots[0] >= _trayMax;
+
+    // ── MAX Indicator ─────────────────────────────────────────
+
+    private void RefreshMaxIndicator()
+    {
+        if (_maxIndicator == null) { return; }
+
+        bool anyFull = IsResourceFull() || IsMoneyFull() || IsGoodsFull();
+        _maxIndicator.SetActive(anyFull);
+    }
 
     // ── 메시 갱신 ────────────────────────────────────────────
 

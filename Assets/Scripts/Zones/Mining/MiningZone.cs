@@ -7,6 +7,9 @@
 /// 수정 로그:
 /// 2026-05-17 OnPlayerEnter에 TutorialSystem.NotifyMiningZoneEntered() 추가
 /// 2026-05-17 OnPlayerEnter 중복 선언 제거 (컴파일 에러 수정)
+/// 2026-05-17 ActivateMiningCollider — GetComponentsInChildren List 오버로드로 교체 (GC 배열 재할당 방지)
+/// 2026-05-17 Start — WarmUpBridgeColliders 추가 (Physics Broadphase 첫 등록 히칭 방지)
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MiningZone : BaseZone
@@ -19,6 +22,29 @@ public class MiningZone : BaseZone
 
     private int             _miningLevel;
     private PlayerCharacter _currentPlayer;
+
+    // GetComponentsInChildren 배열 재할당 방지용 버퍼
+    private readonly List<MiningColliderBridge> _bridgesBuffer = new();
+
+    // ── 초기화 ───────────────────────────────────────────
+
+    private void Start()
+    {
+        WarmUpBridgeColliders();
+    }
+
+    // Physics Broadphase 첫 등록 비용을 게임 시작 시점으로 당김
+    private void WarmUpBridgeColliders()
+    {
+        MiningColliderBridge[] all = FindObjectsByType<MiningColliderBridge>(
+            FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        foreach (MiningColliderBridge bridge in all)
+        {
+            bridge.gameObject.SetActive(true);
+            bridge.gameObject.SetActive(false);
+        }
+    }
 
     // ── Zone 진입/이탈 ────────────────────────────────────
 
@@ -78,23 +104,24 @@ public class MiningZone : BaseZone
 
     private void ActivateMiningCollider(PlayerCharacter player, bool active)
     {
-        MiningColliderBridge[] bridges = player.GetComponentsInChildren<MiningColliderBridge>(true);
+        _bridgesBuffer.Clear();
+        player.GetComponentsInChildren<MiningColliderBridge>(true, _bridgesBuffer);
 
-        if (bridges.Length == 0)
+        if (_bridgesBuffer.Count == 0)
         {
             Logger.Warn("MiningZone", "PlayerCharacter 하위에 MiningColliderBridge가 없음");
             return;
         }
 
-        for (int i = 0; i < bridges.Length; i++)
+        for (int i = 0; i < _bridgesBuffer.Count; i++)
         {
             bool isCurrentLevel = active && (i == _miningLevel);
-            bridges[i].gameObject.SetActive(isCurrentLevel);
+            _bridgesBuffer[i].gameObject.SetActive(isCurrentLevel);
 
             if (isCurrentLevel)
             {
                 // 현재 단계 브릿지에 MiningZone 참조 주입
-                bridges[i].SetMiningZone(this);
+                _bridgesBuffer[i].SetMiningZone(this);
             }
         }
 
