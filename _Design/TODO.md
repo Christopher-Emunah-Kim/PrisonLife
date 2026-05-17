@@ -111,11 +111,15 @@
   - [x] TutorialSystem: ETutorialID 상태 머신, IndicatorArrow 연동                  [P0]
   - [x] SFXManager: null-safe PlayOneShot, 음소거 토글 연동                         [P0]
   - [x] Zone 9종 + ProductionManager: SFX·Tutorial 호출 추가                        [P0]
-  - [~] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh)               [P1]
+  - [x] PlayerArrow 3D 메시 교체 (World Space Canvas Image → 3D mesh)        5c3b6c7
 
-### [MODULE-11] MiningWorker FSM                                                      [P1]
+### [MODULE-11] MiningWorker FSM                                                      [P0]
 신규: MiningWorker.cs
-  - [ ] FSM: Moving/Mining, 셀 예약/해제, 채굴 틱, DOTween 날아가는 연출            [P1]
+  - [x] FSM: Moving/Mining, 셀 예약/해제, 채굴 틱, DOTween 날아가는 연출            [P0]
+
+### [MODULE-12] SalesWorker FSM                                                       [P0]
+신규: SalesWorker.cs
+  - [>] FSM: WaitingAtSales→MovingToPickup→MovingToDesk→MovingToSales 루프           [P0]
 
 ### [MODULE-12] SalesWorker 루프                                                      [P1]
 신규: SalesWorker.cs

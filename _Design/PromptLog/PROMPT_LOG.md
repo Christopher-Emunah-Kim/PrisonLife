@@ -21,6 +21,23 @@
 
 <!-- 최신 요청이 위 -->
 
+### [N] 2026-05-17 19:34
+**카테고리:** CODE
+**요청:**
+SpawnRoutine의 WaitForSeconds를 캐싱하도록 수정해줘.
+
+private WaitForSeconds _spawnWait;
+
+Start 또는 Awake에서
+_spawnWait = new WaitForSeconds(_prisonerData != null ? _prisonerData.spawnInterval : 3f);
+
+SpawnRoutine에서 yield return new WaitForSeconds(...) 대신
+yield return _spawnWait 사용.
+
+동일한 패턴의 WaitForSeconds 반복 생성이 있는 다른 Coroutine도 전부 같은 방식으로 수정해줘.
+
+---
+
 ### [N] 2026-05-17 19:50
 **카테고리:** COMMIT
 **요청:**
@@ -246,5 +263,12 @@ TBD 수치 확정 + 기획 이슈 5개 답변 + Module 1부터 모듈 단위로 
 **카테고리:** PLAN
 **요청:**
 _Design/References/Plan 확인해봐. 내가 기획서를 간단히 작성해왔어. 기획서를 검토하고, PrisonLife를 구현하기 위한 단계별 구현계획을 작성해보자.
+
+---
+
+### 2026-05-17 20:59
+**카테고리:** DEBUG
+**요청:**
+플레이 테스트중인데, GoodsPickupZone과 ResourceDropZone에 버퍼에 카운트는 쌓이는데, 프리팹 메시가 할당되어있지만, 쌓이는게 화면에서 보이지않아. ProductionManager랑 같이 로직 확인해서 이유가 뭔지 확인해봐. SalesZone은 정상작동해.
 
 ---

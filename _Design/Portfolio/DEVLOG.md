@@ -20,6 +20,60 @@
 
 <!-- 새 항목은 가장 최근 날짜가 위로 오도록 추가 -->
 
+## [2026-05-17] [PATTERN] Singleton\<T\> 베이스 추출 + static event → instance event 전환
+
+**상황**
+매니저 7개(`GameManager`, `MoneyManager`, `SalesManager`, `SFXManager`, `UpgradeManager`, `TutorialSystem`, `PrisonManager`, `ProductionManager`)에 동일한 싱글턴 보일러플레이트가 반복되고 있었다. 또한 `public static event`로 선언된 이벤트들이 매니저 생존 여부와 무관하게 어디서든 구독 가능한 구조였다.
+
+**문제·과제**
+- 보일러플레이트 반복: `Instance`, `Awake()` 중복 감지 패턴이 7개 클래스에 복사됨 — 유지보수 단일 변경점 없음
+- `static event`의 위험: 매니저가 `Destroy`된 후에도 구독자가 이벤트 리스트에 남아 메모리 릭 가능. 또한 클래스 타입만 알면 Instance 없이도 구독 가능 — 매니저 생존과 이벤트 접근의 결합이 묵시적
+
+**검토한 선택지**
+- `static event` 유지: 기존 코드 그대로 — 위험 유지
+- `instance event` 전환만: 구독 측에서 `Manager.Instance.OnEvent` 경유 필수화 — Instance null 시 명시적 오류로 문제 가시화
+- `Singleton<T>` + `instance event` 동시 전환: 보일러플레이트 제거 + 이벤트 접근 명시화 동시 해결
+
+**결정**
+`Singleton<T> : MonoBehaviour`를 `Assets/Scripts/Util/`에 추출. `protected virtual OnAwake()` 진입점을 제공해 하위 클래스가 `Awake` override 없이 추가 초기화를 수행하도록 설계. `static event` 11개를 `instance event`로 전환, 구독 측 9개 파일을 `ClassName.Instance.OnEvent` 방식으로 일괄 수정.
+
+**결과**
+매니저당 5줄 보일러플레이트 제거(×7 = 35줄). Instance 경유 구독으로 매니저 생존과 이벤트 접근이 명시적으로 연결됨. `OnAwake()`로 `base.Awake()` 누락 위험 구조적 제거.
+
+**포트폴리오 포인트**
+제네릭 MonoBehaviour 싱글턴 패턴에서 `OnAwake()` 훅 메서드를 통한 하위 클래스 초기화 설계. `static event`와 `instance event`의 생명주기 차이와 메모리 릭 위험에 대한 실무적 판단.
+
+**관련 파일**
+`Assets/Scripts/Util/Singleton.cs`, `Assets/Scripts/Managers/*.cs`
+
+---
+
+## [2026-05-17] [BUG_FIX] Unity MonoBehaviour private Awake 숨김으로 인한 매 프레임 틱 버그
+
+**상황**
+`InteractionZone`에 `WaitForSeconds` 캐싱을 위해 `Awake()`를 신규 추가. 이후 `_tickInterval`을 `1.2f`까지 올려도 자원이 쏟아지는 속도가 전혀 줄지 않아 원인을 파악하기 어려운 상태였다.
+
+**문제·과제**
+`InteractionZone.Awake()`를 새로 추가했지만, 하위 4개 클래스(`ResourceDropZone`, `GoodsPickupZone`, `SalesDeskZone`, `MoneyZone`)가 이미 `private void Awake()`를 선언하고 있었다. C#에서 `private` 메서드는 상속 관계에서 **오버라이드가 아닌 숨김(hiding)** 처리된다. Unity는 각 클래스의 `Awake`를 독립적으로 실행하지 않고 가장 구체적인 타입의 `Awake`만 실행하므로, 부모의 `Awake`가 완전히 무시되어 `_tickWait == null` 상태가 됐다. `yield return null`과 동일하게 동작 → 매 프레임 `OnTick` 실행.
+
+**검토한 선택지**
+- `Start()`로 이동: `Awake` 순서 의존 없이 초기화 가능하나 `OnEnable` 이전 구독 시점 문제
+- `Awake virtual` + 하위 `override`: 표준적인 C# 상속 패턴 — `base.Awake()` 호출 강제 가능
+
+**결정**
+`InteractionZone.Awake()`를 `protected virtual`로 변경. 하위 4개 클래스를 `protected override Awake()` + `base.Awake()` 호출로 수정. 주석으로 누락 방지 경고 추가.
+
+**결과**
+`_tickInterval` 수치 조절이 실제 틱 속도에 정상 반영됨.
+
+**포트폴리오 포인트**
+C# `private` vs `protected virtual` 메서드 상속 차이가 Unity MonoBehaviour 라이프사이클에서 야기하는 실제 버그 사례. 캐싱 최적화 작업이 의도치 않게 기존 동작을 깨뜨리는 패턴 — 변경 범위 파악의 중요성.
+
+**관련 파일**
+`Assets/Scripts/Zones/Base/InteractionZone.cs`, `Assets/Scripts/Zones/Interaction/*.cs`
+
+---
+
 ## [2026-05-17] [BUG_FIX] 이벤트 발행 이후 합류한 오브젝트의 상태 동기화 (Late-Join State Sync)
 
 **상황**
