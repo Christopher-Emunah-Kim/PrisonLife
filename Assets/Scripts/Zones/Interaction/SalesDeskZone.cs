@@ -6,6 +6,7 @@
 /// 수정 로그:
 /// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifySalesDeskZoneEntered() 연결
 /// 2026-05-17 AddGoodsFromWorker() 추가 — SalesWorker 적재 API
+/// 2026-05-17 OnDeskEmpty 인스턴스 이벤트 추가 — 책상 재고 0 시점 알림
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,8 @@ public class SalesDeskZone : InteractionZone
     private readonly List<StackMeshItem>  _activeMeshes = new List<StackMeshItem>();
 
     private int _deskGoods;  // 현재 책상 위 완제품 수
+
+    public event System.Action OnDeskEmpty;
 
     public int DeskGoods    => _deskGoods;
     public int SalesDeskMax => _balanceData != null ? _balanceData.salesDeskMax : 0;
@@ -70,6 +73,12 @@ public class SalesDeskZone : InteractionZone
         _deskGoods -= amount;
         RefreshDeskMeshes();
         UpdateMaxUI();
+
+        if (_deskGoods <= 0)
+        {
+            OnDeskEmpty?.Invoke();
+        }
+
         return true;
     }
 

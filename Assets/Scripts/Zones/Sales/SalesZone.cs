@@ -26,8 +26,8 @@ public class SalesZone : BaseZone
     [Header("판매 틱")]
     [SerializeField] private float _salesTickInterval = 2f;
 
-    // 트리거 안에 플레이어 또는 SalesWorker 존재 여부
-    private bool _isOccupied;
+    // 트리거 안 점유자 수 (플레이어 + Worker 합산) — 0 초과 시 판매 틱 동작
+    private int _occupantCount;
     private WaitForSeconds _salesTickWait;
 
     private void Awake()
@@ -38,21 +38,28 @@ public class SalesZone : BaseZone
     public override void OnPlayerEnter(PlayerCharacter player)
     {
         base.OnPlayerEnter(player);
-        _isOccupied = true;
-        StopTick();
-        _tickCoroutine = StartCoroutine(SalesTick());
+        AddOccupant();
     }
 
     public override void OnPlayerExit(PlayerCharacter player)
     {
-        base.OnPlayerExit(player);
-        _isOccupied = false;
+        // base.OnPlayerExit 호출 금지 — StopTick()이 Worker 점유 중에도 틱을 강제 중단하기 때문
+        RemoveOccupant();
     }
 
-    // SalesWorker용 진입/이탈 알림 (MODULE-12 구현 후 호출됨)
     public void OnWorkerEnter()
     {
-        _isOccupied = true;
+        AddOccupant();
+    }
+
+    public void OnWorkerExit()
+    {
+        RemoveOccupant();
+    }
+
+    private void AddOccupant()
+    {
+        _occupantCount++;
 
         if (_tickCoroutine == null)
         {
@@ -60,9 +67,9 @@ public class SalesZone : BaseZone
         }
     }
 
-    public void OnWorkerExit()
+    private void RemoveOccupant()
     {
-        _isOccupied = false;
+        _occupantCount = Mathf.Max(0, _occupantCount - 1);
     }
 
     private IEnumerator SalesTick()
@@ -71,7 +78,7 @@ public class SalesZone : BaseZone
         {
             yield return _salesTickWait;
 
-            if (!_isOccupied)
+            if (_occupantCount <= 0)
             {
                 _tickCoroutine = null;
                 yield break;
