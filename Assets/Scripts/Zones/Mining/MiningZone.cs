@@ -4,6 +4,9 @@
 /// 소유: 씬 MiningZone 오브젝트 (고정 구역)
 /// 의존: BaseZone, MiningGrid, MiningColliderBridge, InventoryComponent
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 OnPlayerEnter에 TutorialSystem.NotifyMiningZoneEntered() 추가
+/// 2026-05-17 OnPlayerEnter 중복 선언 제거 (컴파일 에러 수정)
 using UnityEngine;
 
 public class MiningZone : BaseZone
@@ -26,6 +29,7 @@ public class MiningZone : BaseZone
         // 진입 시점에 현재 레벨 기준 MAX 적용 — 업그레이드 후 재진입 시 자동 갱신
         player.Inventory.InitMaxValues(_miningLevel);
         ActivateMiningCollider(player, true);
+        TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.Mining);
     }
 
     public override void OnPlayerExit(PlayerCharacter player)
@@ -67,6 +71,7 @@ public class MiningZone : BaseZone
 
         _miningGrid.MineCell(cell);
         _currentPlayer.Inventory.AddResource(1);
+        SFXManager.Instance?.PlayMining();
     }
 
     // ── 내부 헬퍼 ─────────────────────────────────────────

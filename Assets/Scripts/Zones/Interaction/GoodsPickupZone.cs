@@ -3,6 +3,8 @@
 /// 소유: 씬 내 GoodsPickupZone GameObject
 /// 의존: InteractionZone, ProductionManager, InventoryComponent, MaxIndicatorUI, ObjectPool<StackMeshItem>, ObjectPool<ResourceFlyObject>
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifyGoodsPickupZoneEntered() 연결
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,6 +38,12 @@ public class GoodsPickupZone : InteractionZone
     {
         _bufferPool = new ObjectPool<StackMeshItem>(_bufferMeshPrefab, _poolSize, transform);
         _flyPool    = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
+    }
+
+    public override void OnPlayerEnter(PlayerCharacter player)
+    {
+        base.OnPlayerEnter(player);
+        TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.GoodsPickup);
     }
 
     public override void OnPlayerExit(PlayerCharacter player)
@@ -99,6 +107,7 @@ public class GoodsPickupZone : InteractionZone
         }
 
         player.Inventory.AddGoods(1);
+        SFXManager.Instance?.PlayGoodsPickup();
 
         // FlyObject: 꺼진 메시 위치 → 플레이어 위치 (메시 갱신은 이벤트로 처리)
         PlayFlyEffect(flyFrom, player.FlySocket.position);

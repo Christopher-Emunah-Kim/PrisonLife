@@ -3,6 +3,8 @@
 /// 소유: 씬 내 SalesDeskZone GameObject
 /// 의존: InteractionZone, InventoryComponent, GameBalanceData, MaxIndicatorUI, ResourceFlyObject
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifySalesDeskZoneEntered() 연결
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +43,12 @@ public class SalesDeskZone : InteractionZone
         _flyPool  = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
     }
 
+    public override void OnPlayerEnter(PlayerCharacter player)
+    {
+        base.OnPlayerEnter(player);
+        TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.SalesDesk);
+    }
+
     // SalesZone이 판매 틱마다 책상 재고 차감 시 호출
     public bool ConsumeFromDesk(int amount)
     {
@@ -77,6 +85,7 @@ public class SalesDeskZone : InteractionZone
         _deskGoods++;
         RefreshDeskMeshes();
         UpdateMaxUI();
+        SFXManager.Instance?.PlayGoodsDropOff();
 
         PlayFlyEffect(player.FlySocket.position, GetTopMeshPosition());
     }

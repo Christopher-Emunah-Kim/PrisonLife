@@ -94,6 +94,7 @@ public abstract class UpgradeZone : BaseZone
             }
 
             _remainingCost--;
+            SFXManager.Instance?.PlayUpgradePay();
 
             // 돈 차감 성공 → 흡수 연출 (플레이어 FlySocket → Zone 중심)
             PlayFlyEffect(player.FlySocket.position, transform.position);
@@ -104,6 +105,7 @@ public abstract class UpgradeZone : BaseZone
             {
                 _isCompleted = true;
                 StopTick();
+                SFXManager.Instance?.PlayUpgradeComplete();
                 OnUpgradeCompleted();
                 yield break;
             }

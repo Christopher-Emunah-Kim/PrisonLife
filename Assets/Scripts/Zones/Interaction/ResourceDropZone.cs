@@ -3,6 +3,8 @@
 /// 소유: 씬 내 ResourceDropZone GameObject
 /// 의존: InteractionZone, ProductionManager, InventoryComponent, MaxIndicatorUI, ObjectPool<StackMeshItem>, ObjectPool<ResourceFlyObject>
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifyDropZoneEntered() 연결
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +33,12 @@ public class ResourceDropZone : InteractionZone
     {
         _bufferPool = new ObjectPool<StackMeshItem>(_bufferMeshPrefab, _poolSize, transform);
         _flyPool    = new ObjectPool<ResourceFlyObject>(_flyPrefab, _flyPoolSize, transform);
+    }
+
+    public override void OnPlayerEnter(PlayerCharacter player)
+    {
+        base.OnPlayerEnter(player);
+        TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.Drop);
     }
 
     public override void OnPlayerExit(PlayerCharacter player)
@@ -91,6 +99,7 @@ public class ResourceDropZone : InteractionZone
         }
 
         ProductionManager.Instance.AddResource(1);
+        SFXManager.Instance?.PlayResourceDrop();
 
         // FlyObject 도착지 = 방금 켜질 메시 위치 (메시 갱신은 이벤트로 처리)
         PlayFlyEffect(player.FlySocket.position, GetTopMeshPosition());

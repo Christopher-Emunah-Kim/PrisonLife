@@ -3,6 +3,8 @@
 /// 소유: 씬 내 MoneyZone GameObject
 /// 의존: InteractionZone, InventoryComponent, MoneyManager, ResourceFlyObject, DOTween
 /// </summary>
+/// 수정 로그:
+/// 2026-05-17 OnPlayerEnter override 추가 — TutorialSystem.NotifyMoneyZoneEntered() 연결
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -37,6 +39,11 @@ public class MoneyZone : InteractionZone
         _moneyPool = new ObjectPool<StackMeshItem>(_moneyMeshPrefab, _poolSize, transform);
     }
 
+    public override void OnPlayerEnter(PlayerCharacter player)
+    {
+        base.OnPlayerEnter(player);
+        TutorialSystem.Instance?.NotifyEntered(TutorialSystem.ETutorialID.Money);
+    }
 
     // SalesZone이 판매 틱마다 호출
     public void Accumulate(int amount)
@@ -85,6 +92,7 @@ public class MoneyZone : InteractionZone
 
         player.Inventory.AddMoney(transfer);
         MoneyManager.Instance?.Add(transfer);
+        SFXManager.Instance?.PlayMoneyReceive();
     }
 
     private void RefreshMoneyMeshes()

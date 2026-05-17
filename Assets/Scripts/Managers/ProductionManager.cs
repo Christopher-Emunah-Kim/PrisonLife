@@ -5,6 +5,7 @@
 /// </summary>
 /// 수정 로그:
 /// 2026-05-14 ResourceBufferMax / GoodsBufferMax 프로퍼티 추가 (ResourceDropZone, GoodsPickupZone 참조)
+/// 2026-05-17 생산 완료 시 SFXManager.PlayProduction() 추가
 using System;
 using System.Collections;
 using UnityEngine;
@@ -97,6 +98,7 @@ public class ProductionManager : MonoBehaviour
 
             _goodsBuffer++;
             OnGoodsBufferChanged?.Invoke(_goodsBuffer);
+            SFXManager.Instance?.PlayProduction();
         }
     }
 

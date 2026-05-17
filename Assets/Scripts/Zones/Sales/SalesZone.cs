@@ -96,6 +96,7 @@ public class SalesZone : BaseZone
 
         int goodsPrice = _balanceData != null ? _balanceData.goodsPrice : 0;
         _moneyZone?.Accumulate(goodsPrice);
+        SFXManager.Instance?.PlaySales();
 
         Prisoner front = _spawner.FrontPrisoner;
         bool purchaseComplete = front.DecreasePurchaseCount(goodsPrice);
