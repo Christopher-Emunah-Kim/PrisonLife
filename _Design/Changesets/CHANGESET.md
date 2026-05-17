@@ -12,6 +12,65 @@ compact 방법: COMMITTED 항목 → 별도 확인 없이 제거 (Plans/complete
 
 ---
 
+## PrisonLife — CutsceneCallback + ShakeEffect (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_CutsceneCallback_ShakeEffect_v1.0
+  commit: ""
+  files:
+    created:
+      - Assets/Scripts/Util/ShakeEffect.cs
+    modified:
+      - Assets/Scripts/Managers/CameraController.cs
+      - Assets/Scripts/Managers/UpgradeManager.cs
+      - Assets/Scripts/Managers/ProductionManager.cs
+      - Assets/Scripts/Zones/Prison/PrisonZone.cs
+      - Assets/Scripts/Zones/Upgrade/PrisonExpandZone.cs
+  summary: "컷씬 완료 후 Zone 활성화 콜백 구조 + ShakeEffect 공용 컴포넌트 (생산 라인/감옥 진동) + PrisonExpand → GameEndUI 순서 보장"
+  status: PENDING_COMMIT
+  bugs_found: []
+  bugs_fixed: []
+```
+
+---
+
+## PrisonLife — MODULE-17 (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_PrisonLife_v1.0
+  commit: "38cac58"
+  files:
+    created:
+      - Assets/Scripts/UI/TutorialHandUI.cs  # 첫 터치 시 영구 비활성
+    modified:
+      - ProjectSettings/DynamicsManager.asset  # Physics Layer Matrix 설정
+  summary: "MODULE-17: TutorialHandUI + Physics Layer Matrix (Player/Worker/Prisoner/Zone/MiningGrid/MiningCollider)"
+  status: COMMITTED
+  bugs_found: []
+  bugs_fixed: []
+```
+
+---
+
+## PrisonLife — HUD 소지금 갱신 버그 수정 (2026-05-17)
+```yaml
+- date: 2026-05-17
+  plan: PLAN_PrisonLife_v1.0
+  commit: "515f2f9"
+  files:
+    modified:
+      - Assets/Scripts/Characters/Player/InventoryComponent.cs  # ConsumeMoney → Subtract 연동
+      - Assets/Scripts/Managers/MoneyManager.cs                 # Subtract 메서드 추가
+  summary: "ConsumeMoney 후 MoneyManager.Subtract 호출 — HUD OnMoneyChanged 갱신 누락 수정"
+  status: COMMITTED
+  bugs_found:
+    - "InventoryComponent.ConsumeMoney가 내부 슬롯만 차감하고 MoneyManager에 알리지 않아 HUD 미갱신"
+  bugs_fixed:
+    - "MoneyManager.Subtract 추가 (잔액 조건 없이 OnMoneyChanged 발행) + ConsumeMoney에서 호출"
+```
+
+---
+
 ## PrisonLife — 코드 품질 리팩토링 (2026-05-17)
 ```yaml
 - date: 2026-05-17

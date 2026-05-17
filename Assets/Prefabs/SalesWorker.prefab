@@ -70,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b6da58540269794c92dbd2c56248984, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 2
+  _moveSpeed: 3.5
   _rotationSpeed: 10
   _flyPrefab: {fileID: -8497999544761427934, guid: 0e43264f023af6b4ea498c2f681c9ddf, type: 3}
   _flyDuration: 0.4

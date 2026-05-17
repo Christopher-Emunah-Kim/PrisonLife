@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db9b91d4a38c824a982430723717c0f, type: 3}
   m_Name: GameBalanceData
   m_EditorClassIdentifier: 
-  backpackMoneyMax: 500
+  backpackMoneyMax: 250
   miningLevels:
-  - tickInterval: 0.5
-    backpackMax: 20
+  - tickInterval: 0.7
+    backpackMax: 40
+  - tickInterval: 0.52
+    backpackMax: 60
   - tickInterval: 0.33
-    backpackMax: 45
-  - tickInterval: 0.17
-    backpackMax: 80
+    backpackMax: 100
   miningRegenTime: 3
-  resourceBufferMax: 30
-  goodsBufferMax: 20
+  resourceBufferMax: 40
+  goodsBufferMax: 25
   productionTime: 1
-  salesDeskMax: 30
-  goodsPrice: 2
+  salesDeskMax: 50
+  goodsPrice: 4
   drillUpgradeCost: 25
   tractorUpgradeCost: 50
-  miningWorkerCost: 40
-  salesWorkerCost: 50
-  prisonExpandCost: 50
+  miningWorkerCost: 35
+  salesWorkerCost: 30
+  prisonExpandCost: 30
   prisonInitialCapacity: 20
   prisonExpandedCapacity: 40

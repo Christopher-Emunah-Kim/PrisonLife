@@ -21,34 +21,95 @@
 
 <!-- 최신 요청이 위 -->
 
+
+
+### [34] 2026-05-17 21:11
+**카테고리:** DEBUG
+**요청:**
+ResourceDropZone에 자원이 투입될때 풀에 넣어뒀던 BufferMeshPrefab을 활성화하고 메시 쌓이는걸 보여주는 로직은 정상작동해? GoodsPickupZone에서 생산완료된 메시들이 쌓이는것도 확인해봐. ProductionManager는 이 로직과 관계는 없지? 지금 플레이중에 제대로 화면에 메시가 쌓이는게 렌더 되지않아. 플레이어가 트리거하면 자원도 투입되고, 생산도 되고, 생산결과도 GoodsPickupZone에 보이진않지만 다가가면 인벤토리에 들어와. 그냥 버퍼 메시 적층하는게 화면에 SetActive가 안되는거야. 풀에있는 프리팹들 모두가 비활성화상태더라구. 이번 변경으로 어떤 사이드이펙트가 발생했을지 추측해봐
+
+---
+### [31] 2026-05-17 20:50
+**카테고리:** COMMIT
+**요청:**
+A (커밋 계획 승인 — 리팩토링 3개 커밋 실행)
+
+---
+
+### [30] 2026-05-17 20:30
+**카테고리:** COMMIT
+**요청:**
+A (DEVLOG 초안 이대로 기록)
+
+---
+
+### [29] 2026-05-17 20:20
+**카테고리:** COMMIT
+**요청:**
+이번 변경사항들 모아서 커밋계획 잡아봐. 다른세션에서 다른작업 진행중이라 이번세션 진행한 부분만 확인해. SalesWorker는 제외하고.
+
+---
+
+### [28] 2026-05-17 20:10
+**카테고리:** CODE
+**요청:**
+지금 변경한 사항으로 싱글턴/옵저버 패턴 구조화 수준 개선이 얼마나 됐는지 한번 정리해서 보여줄래?
+
+---
+
+### [27] 2026-05-17 20:05
+**카테고리:** CODE
+**요청:**
+SFXManager에 AudioMixer를 사용해서 볼륨이나 에셋 세팅하는걸 조절하는걸 넣는건 좀 오버엔지니어링일까? 빠르게 가능한 작업이 아니면 건너뛸거야.
+
+---
+
+### [26] 2026-05-17 19:58
+**카테고리:** CODE
+**요청:**
+GoodsPickupZone.OnTick에서 코루틴 안에서 다른 코루틴을 중복사용하네. 이 구조는 쓰지말고 ProductionManager.ConsumeGoods 내부에서 버퍼 여유생길때 자동으로 생산 재개하게 수정하자. ConsumeGoods 성공하면 내부에서 TryResumeProduction 호출하는 방식이면 되지?
+
+---
+
+### [25] 2026-05-17 19:50
+**카테고리:** CODE
+**요청:**
+그리고 지금 Manager들에서 static event 방식을 쓰고있는데 여차피 싱글턴이니까 static event일 필요 없어보여. 인스턴스 event 방식으로 바꾸고, 구독 측 코드에서 EventName을 Manager.Instance.EventName 방식으로 수정하자.
+
+---
+
+### [24] 2026-05-17 19:44
+**카테고리:** CODE
+**요청:**
+음 그리고 지금 Manager들 싱글턴들을 베이스 클래스로 추출하자. Singleton<T> : MonoBehaviour 베이스 클래스를 생성해. Assets/Scripts/Util 폴더가 좋을까? 아니면 Managers폴더 그대로? static T Instance {get; private set;} 멤버랑 Awake()만 가지고 있으면 될듯? Game, Money, Production, Sales, Prison 모두 베이스 싱글턴 상속으로 변경하고 기존 Awake 패턴코드들을 수정하거나 제거해.
+
+---
+
+### [23] 2026-05-17 19:42
+**카테고리:** CODE
+**요청:**
+좋아. Logger.cs좀 수정하자. #if UNITY_EDITOR 방식말고 [System.Diagnostics.Conditional("UNITY_EDITOR")] 어트리뷰트 추가하는 방식으로 변경하자. Log, Warn 메서드에만 적용하면 될것같은데. 미사용 변수는 같이 찾아서 제거해줘.
+
+---
+
+### [22] 2026-05-17 19:40
+**카테고리:** CODE
+**요청:**
+그리고 지금 PrisonerBubbleUI랑 UpgradeProgressUI 구조가 거의 비슷한데, 베이스 클래스 추출해봐. 공통기능에 프로그레스바 제어랑 텍스트 갱신 정도면 될것같아.
+
+---
+
+### [21] 2026-05-17 19:38
+**카테고리:** CODE
+**요청:**
+음 MaxIndicatorUI 컴포넌트를 제거하고, 해당 기능을 사용하는 Zone들에서 MaxIndicatorUI 참조 대신에 [SerializeField]로 private gameobject 변수 하나를 갖게하자. SetVisible 호출 부분을 _maxIndicator?.SetActive(true/false)로 처리해도 되는 단순 로직이라서 불필요한것같아.
+
+---
+
 ### [N] 2026-05-17 19:34
 **카테고리:** CODE
 **요청:**
-SpawnRoutine의 WaitForSeconds를 캐싱하도록 수정해줘.
-
-private WaitForSeconds _spawnWait;
-
-Start 또는 Awake에서
-_spawnWait = new WaitForSeconds(_prisonerData != null ? _prisonerData.spawnInterval : 3f);
-
-SpawnRoutine에서 yield return new WaitForSeconds(...) 대신
-yield return _spawnWait 사용.
-
-동일한 패턴의 WaitForSeconds 반복 생성이 있는 다른 Coroutine도 전부 같은 방식으로 수정해줘.
-
----
-
-### [N] 2026-05-17 19:50
-**카테고리:** COMMIT
-**요청:**
-TODO랑 PROMPT_LOG 커밋하고 세션 종료할게
-
----
-
-### [N] 2026-05-17 18:10
-**카테고리:** CODE
-**요청:**
-음.. 일단 이건 다음 세션에서 할일로 남겨놔. (PlayerArrow 3D 메시 교체 관련)
+SpawnRoutine의 WaitForSeconds를 캐싱하도록 수정해줘. private WaitForSeconds _spawnWait 멤버를 만들자. Start나 Awake에서 _spawnWait = new WaitForSeconds() 로 캐싱. SpawnRoutine에서 yield return new WaitForSeconds(...) 말고 yield return _spawnWait 사용하게 바꿔. 동일한 패턴의 WaitForSeconds 반복 생성이 있는 다른 Coroutine도 전부 같은 방식으로 수정해줘.
 
 ---
 ### [N] 2026-05-17 18:00

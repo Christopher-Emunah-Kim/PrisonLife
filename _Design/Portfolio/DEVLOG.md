@@ -20,6 +20,47 @@
 
 <!-- 새 항목은 가장 최근 날짜가 위로 오도록 추가 -->
 
+## [2026-05-17] [BUG_FIX] instance event 전환 후 OnEnable 구독 타이밍 버그
+
+**상황**
+`static event → instance event` 리팩토링 직후 플레이 테스트에서 버퍼 메시가 화면에 전혀 표시되지 않는 현상 발생. 자원 투입·생산·픽업 로직은 정상 동작(인벤토리에 물건이 들어옴)하고, 숫자 카운트도 쌓이지만 `ResourceDropZone`과 `GoodsPickupZone`의 3D 메시 적층만 렌더링되지 않았다. 풀에 있는 프리팹들이 전부 비활성 상태인 것을 확인.
+
+**문제·과제**
+`ObjectPool.Get()`은 `SetActive(true)`를 호출하므로 풀 자체는 정상. 메시 갱신 진입점인 `RefreshBufferMeshes()`가 호출되지 않는 것이 원인이었다. 이 메서드는 `HandleXxxBufferChanged` 이벤트 핸들러 안에 있는데, 핸들러 자체가 등록되지 않은 상태였다.
+
+구독 코드:
+```csharp
+private void OnEnable()
+{
+    ProductionManager.Instance.OnResourceBufferChanged += HandleResourceBufferChanged;
+}
+```
+
+`OnEnable`은 해당 오브젝트의 `Awake` 직후에 호출된다. 그런데 Unity 씬 로드 순서에서 `ResourceDropZone`의 `OnEnable`이 `ProductionManager`의 `Awake`(= `Singleton<T>.Awake`, Instance 할당 시점)보다 먼저 실행되면 `Instance == null` → `NullReferenceException` → **구독 자체가 실패**. 이후 버퍼가 변경돼도 핸들러가 호출되지 않아 메시 갱신이 전혀 일어나지 않았다.
+
+이전 `static event` 방식은 `ClassName.OnEvent += handler` 형태로 Instance 없이 타입만으로 구독 가능했기 때문에 이 문제가 없었다. instance event 전환이 이 타이밍 의존성을 수면 위로 드러냈다.
+
+**검토한 선택지**
+- `OnEnable` 유지 + null 가드: `if (Instance != null)` 조건 추가 — null이면 구독 누락, 근본 해결 안 됨
+- `Start()`로 구독 이전: 씬의 모든 오브젝트 `Awake`가 완료된 후 `Start`가 실행되므로 Instance 보장 가능
+- Singleton에 지연 구독 큐 추가: 과도한 복잡도 — 이 규모에서 불필요
+
+**결정**
+구독을 `OnEnable` → `Start()`로 이전. `OnDisable`에는 null 가드 추가. `ResourceDropZone`·`GoodsPickupZone`은 `Start()`에서 현재 버퍼 값으로 핸들러를 즉시 1회 호출해 초기 메시 상태를 동기화(씬 시작 시 이미 버퍼에 수량이 있는 경우 대비).
+
+영향 파일 9개 일괄 수정: `ResourceDropZone`, `GoodsPickupZone`, `HUDController`, `CameraController`, `GameEndUI`, `PrisonZone`, `GameManager`, `UpgradeManager`, `PrisonCounterUI`.
+
+**결과**
+버퍼 메시 적층 정상 렌더링 확인. NullReferenceException 9건 제거.
+
+**포트폴리오 포인트**
+Unity 라이프사이클에서 `OnEnable`과 `Start`의 실행 순서 차이가 만드는 구독 타이밍 버그. `static event`는 Instance 없이 구독 가능하지만 instance event는 반드시 Instance가 살아있어야 하므로, 이 전환이 기존에 묵시적으로 숨겨져 있던 라이프사이클 의존성을 표면화시킨 사례. `Start()`는 씬 내 모든 오브젝트의 `Awake`가 완료된 후 실행됨이 보장되므로 싱글턴 참조 구독의 안전한 진입점.
+
+**관련 파일**
+`Assets/Scripts/Zones/Interaction/ResourceDropZone.cs`, `GoodsPickupZone.cs`, `Assets/Scripts/UI/HUDController.cs`, `GameEndUI.cs`, `PrisonCounterUI.cs`, `Assets/Scripts/Managers/CameraController.cs`, `GameManager.cs`, `UpgradeManager.cs`, `Assets/Scripts/Zones/Prison/PrisonZone.cs`
+
+---
+
 ## [2026-05-17] [PATTERN] Singleton\<T\> 베이스 추출 + static event → instance event 전환
 
 **상황**
