@@ -8,6 +8,7 @@
 /// 2026-05-17 생산 완료 시 SFXManager.PlayProduction() 추가
 /// 2026-05-17 WaitForSeconds 캐싱 (_productionWait)
 /// 2026-05-17 Singleton<T> 베이스 클래스 적용
+/// 2026-05-17 ShakeEffect 연동 — 생산 시작 시 Loop(), 정지 시 Stop()
 using System;
 using System.Collections;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class ProductionManager : Singleton<ProductionManager>
     public event Action      OnProductionStopped;
 
     [SerializeField] private GameBalanceData _balanceData;
+    [SerializeField] private ShakeEffect     _shakeEffect;      // 생산 기계 메시에 부착된 진동 컴포넌트
 
     private int            _resourceBuffer;
     private int            _goodsBuffer;
@@ -74,6 +76,7 @@ public class ProductionManager : Singleton<ProductionManager>
     private IEnumerator ProductionRoutine()
     {
         OnProductionStarted?.Invoke();
+        _shakeEffect?.Loop();
 
         while (true)
         {
@@ -104,6 +107,7 @@ public class ProductionManager : Singleton<ProductionManager>
     {
         _productionCoroutine = null;
         OnProductionStopped?.Invoke();
+        _shakeEffect?.Stop();
     }
 
     // GoodsPickupZone이 완제품을 가져간 뒤 버퍼 여유 생기면 생산 재개

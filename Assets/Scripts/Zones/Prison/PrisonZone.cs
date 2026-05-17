@@ -5,6 +5,7 @@
 /// </summary>
 /// 수정 로그:
 /// 2026-05-16 메시 배열 제거 → 프리팹+소켓 그리드 동적 생성
+/// 2026-05-17 ShakeEffect 연동 — 감옥 만원 시 진동 연출
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,11 @@ public class PrisonZone : MonoBehaviour
     [Header("참조")]
     [SerializeField] private PrisonerSpawner _spawner;
     [SerializeField] private LayerMask       _prisonerLayer;
+
+    [Header("진동 연출 (감옥 만원 시)")]
+    [SerializeField] private ShakeEffect _shakeEffect;
+    [SerializeField] private float       _shakeOnFullDuration  = 0.6f;
+    [SerializeField] private float       _shakeOnFullMagnitude = 0.08f;
 
     // 동적 생성된 메시 목록
     private readonly List<GameObject> _spawnedMeshes = new List<GameObject>();
@@ -123,6 +129,7 @@ public class PrisonZone : MonoBehaviour
     private void HandlePrisonFull()
     {
         _spawner?.SetNoCellAll(true);
+        _shakeEffect?.Play(_shakeOnFullDuration, _shakeOnFullMagnitude);
     }
 
     private void HandlePrisonExpanded()
