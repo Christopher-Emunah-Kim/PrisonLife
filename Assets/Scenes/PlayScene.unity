@@ -14981,7 +14981,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8eecc93f5d8924578a7e6f401ff12542, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 02319b77c8723418ea9a129158abf2bf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17681,8 +17681,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1231912775}
   - {fileID: 1706433286}
+  - {fileID: 1231912775}
   m_Father: {fileID: 1825575062}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -20980,8 +20980,8 @@ MonoBehaviour:
   _storeUrl: https://play.google.com/store
   _muteButton: {fileID: 1231912778}
   _muteIcon: {fileID: 1706433288}
-  _soundOnSprite: {fileID: 0}
-  _soundOffSprite: {fileID: 0}
+  _soundOnSprite: {fileID: 21300000, guid: 27824257696aa404f88d9556a369d21c, type: 3}
+  _soundOffSprite: {fileID: 21300000, guid: 294c8f8b201614a0db1f0a8b8b46b46d, type: 3}
   _safeAreaPanel: {fileID: 1825575062}
 --- !u!1001 &961291338
 PrefabInstance:
@@ -27846,14 +27846,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e098add14f3e34b49b7772e1c6b72449, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -38114,7 +38114,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e098add14f3e34b49b7772e1c6b72449, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 27824257696aa404f88d9556a369d21c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -40519,11 +40519,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerTransform: {fileID: 1749261445}
-  _miningZoneArrow: {fileID: 632091453}
-  _dropZoneArrow: {fileID: 394533854}
-  _goodsPickupZoneArrow: {fileID: 324858749}
-  _salesDeskZoneArrow: {fileID: 935759828}
-  _moneyZoneArrow: {fileID: 1008829509}
+  _miningArrow: {fileID: 0}
+  _dropArrow: {fileID: 0}
+  _goodsPickupArrow: {fileID: 0}
+  _salesDeskArrow: {fileID: 0}
+  _moneyArrow: {fileID: 0}
   _playerArrow: {fileID: 1000003448}
   _miningZoneTransform: {fileID: 652439570}
   _dropZoneTransform: {fileID: 1587992263}
